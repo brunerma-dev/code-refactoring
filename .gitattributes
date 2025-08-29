@@ -1,0 +1,76 @@
+# ------------------------------------------------------------
+# Default: normalize text to LF in repo (works on all OSes)
+# ------------------------------------------------------------
+*                 text=auto eol=lf
+
+# ------------------------------------------------------------
+# Scripts & tooling
+# ------------------------------------------------------------
+# Windows batch stays CRLF
+*.bat             text eol=crlf
+*.cmd             text eol=crlf
+
+# Shell / PowerShell / Docker must be LF for Linux
+*.sh              text eol=lf
+*.ps1             text eol=lf
+Dockerfile        text eol=lf
+
+# Preserve executable bit for shell scripts checked into Git
+*.sh              eol=lf
+
+# ------------------------------------------------------------
+# .NET / build / config files — LF is fine everywhere
+# ------------------------------------------------------------
+*.sln             text eol=lf
+*.cs              text eol=lf
+*.csproj          text eol=lf
+*.props           text eol=lf
+*.targets         text eol=lf
+*.json            text eol=lf
+*.yml             text eol=lf
+*.yaml            text eol=lf
+*.md              text eol=lf
+*.editorconfig    text eol=lf
+*.gitignore       text eol=lf
+
+# ------------------------------------------------------------
+# Binaries & assets — never modify line endings
+# ------------------------------------------------------------
+# Common binary/code artifacts
+*.dll             -text
+*.exe             -text
+*.pdb             -text
+*.nupkg           -text
+*.snupkg          -text
+*.zip             -text
+*.7z              -text
+
+# Images / media
+*.png             -text
+*.jpg             -text
+*.jpeg            -text
+*.gif             -text
+*.ico             -text
+*.webp            -text
+*.avif            -text
+*.bmp             -text
+*.tif             -text
+*.tiff            -text
+# (SVG is XML text, but often safer as binary to avoid EOL changes)
+*.svg             -text
+
+# Fonts
+*.woff            -text
+*.woff2           -text
+*.ttf             -text
+*.otf             -text
+*.eot             -text
+
+# Docs / design files
+*.pdf             -text
+*.doc             -text
+*.docx            -text
+*.ppt             -text
+*.pptx            -text
+*.xls             -text
+*.xlsx            -text
