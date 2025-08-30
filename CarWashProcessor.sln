@@ -1,9 +1,18 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.13.35931.197 d17.13
+VisualStudioVersion = 17.13.35931.197
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CarWashProcessor", "CarWashProcessor\CarWashProcessor.csproj", "{5949840A-76EA-4811-BE74-F7E043F574DB}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{02EA681E-C7D8-13C7-8484-4AC65E1B71E8}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "decisions", "decisions", "{E56475B0-DE46-4E06-BED3-79CCF723B50E}"
+	ProjectSection(SolutionItems) = preProject
+		docs\decisions\ADR-0000-initial-state.md = docs\decisions\ADR-0000-initial-state.md
+		docs\decisions\ADR-0000_template.md = docs\decisions\ADR-0000_template.md
+		docs\decisions\ADR-INDEX.md = docs\decisions\ADR-INDEX.md
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -18,6 +27,9 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{E56475B0-DE46-4E06-BED3-79CCF723B50E} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {86BA9D16-AB6E-4519-8CDE-18A7C0A82A34}
