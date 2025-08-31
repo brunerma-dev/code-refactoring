@@ -24,8 +24,8 @@ public class TireShineService
 	public TireShineService(ILogger<TireShineService> logger)
 	{
 		// Set services
-		_logger = logger;
-	}
+		_logger = logger; // TODO: Fast fail if dependency injection passed a null constructor parameter. (Need this across the board.)
+    }
 
     /// <summary>
     /// Shines the tires for the given car job.

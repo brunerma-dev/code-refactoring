@@ -26,8 +26,8 @@ public class BasicWashService
     public BasicWashService(ILogger<BasicWashService> logger)
 	{
 		// Set services
-		_logger = logger;
-	}
+		_logger = logger; // TODO: Fast fail if dependency injection passed a null constructor parameter. (Need this across the board.)
+    }
 
     /// <summary>
     /// Does a basic wash for the given car job.
@@ -40,8 +40,10 @@ public class BasicWashService
     /// </returns>
     public async Task DoBasicWashAsync(CarJob carJob)
 	{
-		// Wait a second (simulating wash type-specific work).
-		await Task.Delay(TimeSpan.FromSeconds(1));
+        // TODO: Bug. Defensive programming, validate input parameters on public methods. (need this for all public methods)
+
+        // Wait a second (simulating wash type-specific work).
+        await Task.Delay(TimeSpan.FromSeconds(1));
 
 		// Log information
         // TODO: BUG - Structured logging without named parameters. Named templates are queryable in KQL.

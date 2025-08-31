@@ -5,16 +5,16 @@ namespace CarWashProcessor.Services;
 /// <summary>
 /// Service responsible for performing a "To The Max" car wash.
 /// </summary>
+/// <remarks>
+/// TODO: Implement IWashServiceStrategy (align with strategy pattern & DI).
+/// Needs a common interface with other wash services. All *WashService classes have a single public method, 
+/// accepting the CarJob. These are strategies for washing a car.
+/// </remarks>
 public class ToTheMaxWashService
 {
     /// <summary>
-    /// Logger instance for logging information related to the BasicWashService.
+    /// Logger instance for logging information related to the ToTheMaxWashService.
     /// </summary>
-    /// <remarks>
-    /// TODO: Implement IWashServiceStrategy (align with strategy pattern & DI).
-    /// Needs a common interface with other wash services. All *WashService classes have a single public method, 
-    /// accepting the CarJob. These are strategies for washing a car.
-    /// </remarks>
     private readonly ILogger<ToTheMaxWashService> _logger;
 
     /// <summary>
@@ -40,6 +40,8 @@ public class ToTheMaxWashService
     /// </returns>
     public async Task DoToTheMaxWashAsync(CarJob carJob)
 	{
+        // TODO: Bug. Defensive programming, validate input parameters on public methods. (need this for all public methods)
+
         // Wait a second (simulating wash type-specific work).
         await Task.Delay(TimeSpan.FromSeconds(1));
 
