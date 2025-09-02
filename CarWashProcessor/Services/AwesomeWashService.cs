@@ -12,12 +12,15 @@ namespace CarWashProcessor.Services;
 /// Needs a common interface with other wash services. All *WashService classes have a single public method, 
 /// accepting the CarJob. These are strategies for washing a car.
 /// </remarks>
-public class AwesomeWashService
+public class AwesomeWashService : IWashServiceStrategy
 {
     /// <summary>
     /// Logger instance for logging information related to the AwesomeWashService.
     /// </summary>
     private readonly ILogger<AwesomeWashService> _logger;
+
+    /// <inheritdoc />
+    public EServiceWash Key => EServiceWash.Awesome;
 
     /// <summary>
     /// Constructor for AwesomeWashService.
@@ -66,4 +69,7 @@ public class AwesomeWashService
         _logger.LogInformation("--> Awesome wash performed for customer {CustomerId}!", carJob.CustomerId);
 #pragma warning restore CA1848 // Use the LoggerMessage delegates
     }
+
+    /// <inheritdoc />
+    public async Task PerformWashAsync(CarJob carJob) => await DoAwesomeWashAsync(carJob);
 }
