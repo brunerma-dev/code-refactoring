@@ -1,4 +1,4 @@
-// TODO: Consistent file header containing copyright.
+// Copyright (c) 2025 Car Wash Processor, All Rights Reserved
 
 using CarWashProcessor.Models;
 
@@ -61,7 +61,7 @@ public class TireShineService
          * using the straightforward approach as it can be argued this does not invalidate the requirement: 
          * "The system is reasonably performant". */
 #pragma warning disable CA1848 // Use the LoggerMessage delegates
-        _logger.LogInformation("--> Tires have been shined for customer {}!", carJob.CustomerId);
+        _logger.LogInformation("--> Tires have been shined for customer {CustomerId}!", carJob.CustomerId);
 #pragma warning restore CA1848 // Use the LoggerMessage delegates
     }
 }
