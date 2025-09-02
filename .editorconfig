@@ -1,0 +1,127 @@
+# Top-level EditorConfig file
+root = true
+
+############################
+# Defaults for all files
+############################
+[*]
+charset = utf-8
+end_of_line = lf
+insert_final_newline = true
+trim_trailing_whitespace = true
+
+# Sensible formatting defaults
+indent_style = space
+indent_size = 4
+max_line_length = 120
+
+############################
+# Windows-only script types
+############################
+[*.{bat,cmd}]
+end_of_line = crlf
+charset = utf-8
+indent_style = tab
+indent_size = 4
+trim_trailing_whitespace = false
+
+############################
+# Markdown / prose
+############################
+[*.md]
+trim_trailing_whitespace = false
+max_line_length = off
+
+[*.{adoc,txt,mdx}]
+trim_trailing_whitespace = false
+
+############################
+# JSON / YAML / TOML (2 spaces)
+############################
+[*.{json,jsonc,yml,yaml,toml}]
+indent_style = space
+indent_size = 2
+
+############################
+# XML (incl. .csproj, .props, .targets)
+############################
+[*.{xml,csproj,vbproj,props,targets,nuspec,resx,config,runsettings}]
+indent_style = space
+indent_size = 2
+
+############################
+# XAML
+############################
+[*.xaml]
+indent_style = space
+indent_size = 2
+
+############################
+# C# / .NET conventions
+############################
+[*.{cs,csx}]
+# Indentation
+indent_style = space
+indent_size = 4
+
+# Newlines & braces (common .NET style)
+csharp_new_line_before_open_brace = all
+csharp_new_line_between_query_expression_clauses = true
+csharp_indent_case_contents = true
+csharp_indent_switch_labels = true
+
+# Usings
+dotnet_separate_import_directive_groups = true
+dotnet_sort_system_directives_first = true
+file_header_template = unset
+
+# Prefer modern language features (non-blocking hints for formatters/analyzers)
+csharp_prefer_braces = when_multiline:suggestion
+csharp_style_var_elsewhere = true:suggestion
+csharp_style_var_for_built_in_types = true:suggestion
+csharp_style_var_when_type_is_apparent = true:suggestion
+csharp_style_expression_bodied_methods = when_on_single_line:suggestion
+csharp_style_expression_bodied_properties = when_on_single_line:suggestion
+csharp_style_prefer_switch_expression = true:suggestion
+csharp_style_inlined_variable_declaration = true:suggestion
+dotnet_style_qualification_for_field = false:suggestion
+dotnet_style_qualification_for_property = false:suggestion
+dotnet_style_qualification_for_method = false:suggestion
+dotnet_style_qualification_for_event = false:suggestion
+
+############################
+# PowerShell / Shell scripts
+############################
+[*.{ps1,psm1,psd1,sh,bash}]
+end_of_line = lf
+indent_style = space
+indent_size = 2
+
+############################
+# CSS / SCSS / Less
+############################
+[*.{css,scss,less}]
+indent_style = space
+indent_size = 2
+
+############################
+# TypeScript / JavaScript
+############################
+[*.{ts,tsx,js,jsx,mjs,cjs}]
+indent_style = space
+indent_size = 2
+
+############################
+# Solution & MSBuild artifacts
+############################
+[*.sln]
+end_of_line = lf
+insert_final_newline = true
+
+############################
+# Binary-like files (safety)
+# (Editors generally ignore these, but keep whitespace rules off)
+############################
+[*.{png,jpg,jpeg,gif,bmp,ico,zip,7z,pdf,ttf,otf,woff,woff2}]
+trim_trailing_whitespace = false
+insert_final_newline = false
