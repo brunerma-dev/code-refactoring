@@ -73,6 +73,6 @@ adr:
   - ADR-0003: Introduce configuration-driven add-on ordering (if required).  
 
 ## 11) Links
-- **PRs/Commits**: _(to be added once merged)_  
+- **PRs/Commits**: Pull Request: [Initial unit tests](https://github.com/brunerma-dev/code-refactoring/pull/4)
 - **Related ADRs**: [ADR-0000](ADR-0000-initial-state.md) Initial State.  
 - **README Anchor**: `CarWashProcessor/README.txt` (challenge requirements: stability & longevity).  
