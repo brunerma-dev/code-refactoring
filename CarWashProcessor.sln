@@ -11,8 +11,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "decisions", "decisions", "{
 	ProjectSection(SolutionItems) = preProject
 		docs\decisions\ADR-0000-initial-state.md = docs\decisions\ADR-0000-initial-state.md
 		docs\decisions\ADR-0000_template.md = docs\decisions\ADR-0000_template.md
+		docs\decisions\ADR-0001-unit-test-project.md = docs\decisions\ADR-0001-unit-test-project.md
 		docs\decisions\ADR-INDEX.md = docs\decisions\ADR-INDEX.md
 	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CarWashProcessor.UnitTests", "CarWashProcessor.UnitTests\CarWashProcessor.UnitTests.csproj", "{77D60904-D6E2-4684-9FB4-EA312D9E9D5E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -24,6 +27,10 @@ Global
 		{5949840A-76EA-4811-BE74-F7E043F574DB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5949840A-76EA-4811-BE74-F7E043F574DB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5949840A-76EA-4811-BE74-F7E043F574DB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{77D60904-D6E2-4684-9FB4-EA312D9E9D5E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{77D60904-D6E2-4684-9FB4-EA312D9E9D5E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{77D60904-D6E2-4684-9FB4-EA312D9E9D5E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{77D60904-D6E2-4684-9FB4-EA312D9E9D5E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
