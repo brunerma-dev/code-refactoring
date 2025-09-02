@@ -1,4 +1,6 @@
-﻿using CarWashProcessor.Models;
+// Copyright (c) 2025 Car Wash Processor, All Rights Reserved
+
+using CarWashProcessor.Models;
 using CarWashProcessor.Services;
 using Microsoft.Extensions.Logging;
 using Moq;
