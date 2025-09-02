@@ -1,4 +1,6 @@
-﻿using CarWashProcessor.Models;
+// Copyright (c) 2025 Car Wash Processor, All Rights Reserved
+
+using CarWashProcessor.Models;
 using CarWashProcessor.Services;
 using Microsoft.Extensions.Logging;
 using Moq;
@@ -21,10 +23,25 @@ namespace CarWashProcessor.UnitTests.Services
         }
 
         [TestMethod]
+        public void Ctor_WhenLoggerIsNull_ThrowsArgumentNullException()
+        {
+            var exception = Assert.ThrowsException<ArgumentNullException>(() => _washService = new InteriorCleanService(null!));
+            Assert.AreEqual("logger", exception.ParamName);
+        }
+
+        [TestMethod]
         public void Ctor_WhenAllArgumentsProvided_Succeeds()
         {
             _washService = new InteriorCleanService(_loggerMock!.Object);
             Assert.IsTrue(_washService is not null);
+        }
+
+        [TestMethod]
+        public async Task CleanInteriorAsync_WhenCarJobIsNull_ThrowsArgumentNullException()
+        {
+            _washService = new InteriorCleanService(_loggerMock!.Object);
+            var exception = await Assert.ThrowsExceptionAsync<ArgumentNullException>(async () => await _washService.CleanInteriorAsync(null!));
+            Assert.AreEqual("carJob", exception.ParamName);
         }
 
         [TestMethod]
@@ -37,11 +54,12 @@ namespace CarWashProcessor.UnitTests.Services
             await _washService.CleanInteriorAsync(_carJob!);
 
             // Assert
+            // TODO: This approach could be modified by creating a custom ILogger implementation that records logs to a list and asserting against that.
             _loggerMock.Verify(
                 x => x.Log(
                     LogLevel.Information,
                     It.IsAny<EventId>(),
-                    It.Is<It.IsAnyType>((v, t) => v.ToString()!.Contains("--> Interior has been cleaned for customer")),
+                    It.Is<It.IsAnyType>((v, t) => v.ToString()!.Contains("--> Interior has been cleaned for customer " + _carJob!.CustomerId)),
                     It.IsAny<Exception>(),
                     It.IsAny<Func<It.IsAnyType, Exception?, string>>()),
                 Times.Once);
