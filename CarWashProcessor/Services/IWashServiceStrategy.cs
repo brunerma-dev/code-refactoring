@@ -12,6 +12,14 @@ namespace CarWashProcessor.Services
         /// <summary>
         /// Gets the key representing the type of wash service this strategy handles.
         /// </summary>
+        /// <remarks>
+        /// This key is used for:
+        /// <list type="bullet">
+        ///     <item>identifying and selecting the appropriate wash service strategy.</item>
+        ///     <item>optional function-level validation the correct service strategy was selected.</item>
+        ///     <item>future evolution to allow attribute-driven runtime scanning to discover and register <see cref="IWashServiceStrategy"/> implementations.</item>
+        /// </list>
+        /// </remarks>
         EServiceWash Key { get; }
 
         /// <summary>

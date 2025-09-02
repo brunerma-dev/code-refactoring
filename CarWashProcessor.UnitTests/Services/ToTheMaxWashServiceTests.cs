@@ -37,6 +37,16 @@ public class ToTheMaxWashServiceTests
     }
 
     [TestMethod]
+    public void Key_Property_ReturnsExpectedValue()
+    {
+        // Act
+        _washService = new ToTheMaxWashService(_loggerMock!.Object);
+
+        // Assert
+        Assert.AreEqual(EServiceWash.ToTheMax, _washService.Key);
+    }
+
+    [TestMethod]
     public async Task DoAwesomeWashAsync_c_WhenCarJobIsNull_ThrowsArgumentNullException()
     {
         _washService = new ToTheMaxWashService(_loggerMock!.Object);
@@ -52,6 +62,27 @@ public class ToTheMaxWashServiceTests
 
         // Act
         await _washService.DoToTheMaxWashAsync(_carJob!);
+
+        // Assert
+        // TODO: This approach could be modified by creating a custom ILogger implementation that records logs to a list and asserting against that.
+        _loggerMock.Verify(
+            x => x.Log(
+                LogLevel.Information,
+                It.IsAny<EventId>(),
+                It.Is<It.IsAnyType>((v, t) => v.ToString()!.Contains("--> To The Max wash performed for customer " + _carJob!.CustomerId)),
+                It.IsAny<Exception>(),
+                It.IsAny<Func<It.IsAnyType, Exception?, string>>()),
+            Times.Once);
+    }
+
+    [TestMethod]
+    public async Task PerformWashAsync_WhenCalled_PerformsWashAndLogs()
+    {
+        // Arrange
+        _washService = new ToTheMaxWashService(_loggerMock!.Object);
+
+        // Act
+        await _washService.PerformWashAsync(_carJob!);
 
         // Assert
         // TODO: This approach could be modified by creating a custom ILogger implementation that records logs to a list and asserting against that.

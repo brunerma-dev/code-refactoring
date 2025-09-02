@@ -7,11 +7,6 @@ namespace CarWashProcessor.Services;
 /// <summary>
 /// Service responsible for performing an awesome car wash.
 /// </summary>
-/// <remarks>
-/// TODO: Implement IWashServiceStrategy (align with strategy pattern & DI).
-/// Needs a common interface with other wash services. All *WashService classes have a single public method, 
-/// accepting the CarJob. These are strategies for washing a car.
-/// </remarks>
 public class AwesomeWashService : IWashServiceStrategy
 {
     /// <summary>
@@ -52,8 +47,11 @@ public class AwesomeWashService : IWashServiceStrategy
     /// <exception cref="ArgumentNullException">
     /// Thrown if the <paramref name="carJob"/> parameter is null.
     /// </exception>
-    public async Task DoAwesomeWashAsync(CarJob carJob)
-	{
+    public async Task DoAwesomeWashAsync(CarJob carJob) => await PerformWashAsync(carJob);
+	
+    /// <inheritdoc />
+    public async Task PerformWashAsync(CarJob carJob)
+    {
         // Defensive programming. Validate input parameters on public methods.
         ArgumentNullException.ThrowIfNull(carJob, nameof(carJob));
 
@@ -69,7 +67,4 @@ public class AwesomeWashService : IWashServiceStrategy
         _logger.LogInformation("--> Awesome wash performed for customer {CustomerId}!", carJob.CustomerId);
 #pragma warning restore CA1848 // Use the LoggerMessage delegates
     }
-
-    /// <inheritdoc />
-    public async Task PerformWashAsync(CarJob carJob) => await DoAwesomeWashAsync(carJob);
 }
