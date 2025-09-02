@@ -56,7 +56,12 @@ public class InteriorCleanService
         await Task.Delay(TimeSpan.FromSeconds(1));
 
         // Log information
-        // TODO: BUG - Structured logging without named parameters. Named templates are queryable in KQL.
-        _logger.LogInformation("--> Interior has been cleaned for customer {}!", carJob.CustomerId);
-	}
+        /* TODO: Evaluate CA1848: Use LoggerMessage.Define to pre-define logging messages for better performance. 
+         * This is a suggestion from code analysis, but for simplicity and readability in this example, we are 
+         * using the straightforward approach as it can be argued this does not invalidate the requirement: 
+         * "The system is reasonably performant". */
+#pragma warning disable CA1848 // Use the LoggerMessage delegates
+        _logger.LogInformation("--> Interior has been cleaned for customer {CustomerId}!", carJob.CustomerId);
+#pragma warning restore CA1848 // Use the LoggerMessage delegates
+    }
 }

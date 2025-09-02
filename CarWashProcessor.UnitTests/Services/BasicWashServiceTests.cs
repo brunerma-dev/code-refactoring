@@ -52,11 +52,12 @@ public class BasicWashServiceTests
         await _washService.DoBasicWashAsync(_carJob!);
 
         // Assert
+        // TODO: This approach could be modified by creating a custom ILogger implementation that records logs to a list and asserting against that.
         _loggerMock.Verify(
             x => x.Log(
                 LogLevel.Information,
                 It.IsAny<EventId>(),
-                It.Is<It.IsAnyType>((v, t) => v.ToString()!.Contains("--> Basic wash performed for customer")),
+                It.Is<It.IsAnyType>((v, t) => v.ToString()!.Contains("--> Basic wash performed for customer " + _carJob!.CustomerId)),
                 It.IsAny<Exception>(),
                 It.IsAny<Func<It.IsAnyType, Exception?, string>>()),
             Times.Once);
