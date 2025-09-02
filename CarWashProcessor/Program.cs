@@ -1,4 +1,4 @@
-// TODO: Consistent file header containing copyright.
+// Copyright (c) 2024 Car Wash Processor., All Rights Reserved
 
 using CarWashProcessor.Services;
 
