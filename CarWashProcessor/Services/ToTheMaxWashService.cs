@@ -7,17 +7,16 @@ namespace CarWashProcessor.Services;
 /// <summary>
 /// Service responsible for performing a "To The Max" car wash.
 /// </summary>
-/// <remarks>
-/// TODO: Implement IWashServiceStrategy (align with strategy pattern & DI).
-/// Needs a common interface with other wash services. All *WashService classes have a single public method, 
-/// accepting the CarJob. These are strategies for washing a car.
-/// </remarks>
-public class ToTheMaxWashService
+public class ToTheMaxWashService : IWashServiceStrategy
 {
     /// <summary>
     /// Logger instance for logging information related to the ToTheMaxWashService.
     /// </summary>
     private readonly ILogger<ToTheMaxWashService> _logger;
+
+
+    /// <inheritdoc />
+    public EServiceWash Key => EServiceWash.ToTheMax;
 
     /// <summary>
     /// Constructor for ToTheMaxWashService.
@@ -49,8 +48,11 @@ public class ToTheMaxWashService
     /// <exception cref="ArgumentNullException">
     /// Thrown if the <paramref name="carJob"/> parameter is null.
     /// </exception>
-    public async Task DoToTheMaxWashAsync(CarJob carJob)
-	{
+    public async Task DoToTheMaxWashAsync(CarJob carJob) => await PerformWashAsync(carJob);
+
+    /// <inheritdoc />
+    public async Task PerformWashAsync(CarJob carJob)
+    {
         // Defensive programming. Validate input parameters on public methods.
         ArgumentNullException.ThrowIfNull(carJob, nameof(carJob));
 

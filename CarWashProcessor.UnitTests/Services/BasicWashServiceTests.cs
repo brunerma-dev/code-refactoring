@@ -37,6 +37,16 @@ public class BasicWashServiceTests
     }
 
     [TestMethod]
+    public void Key_Property_ReturnsExpectedValue()
+    {
+        // Act
+        _washService = new BasicWashService(_loggerMock!.Object);
+
+        // Assert
+        Assert.AreEqual(EServiceWash.Basic, _washService.Key);
+    }
+
+    [TestMethod]
     public async Task DoBasicWashAsync_WhenCarJobIsNull_ThrowsArgumentNullException()
     {
         _washService = new BasicWashService(_loggerMock!.Object);
@@ -52,6 +62,27 @@ public class BasicWashServiceTests
 
         // Act
         await _washService.DoBasicWashAsync(_carJob!);
+
+        // Assert
+        // TODO: This approach could be modified by creating a custom ILogger implementation that records logs to a list and asserting against that.
+        _loggerMock.Verify(
+            x => x.Log(
+                LogLevel.Information,
+                It.IsAny<EventId>(),
+                It.Is<It.IsAnyType>((v, t) => v.ToString()!.Contains("--> Basic wash performed for customer " + _carJob!.CustomerId)),
+                It.IsAny<Exception>(),
+                It.IsAny<Func<It.IsAnyType, Exception?, string>>()),
+            Times.Once);
+    }
+
+    [TestMethod]
+    public async Task PerformWashAsync_WhenCalled_PerformsWashAndLogs()
+    {
+        // Arrange
+        _washService = new BasicWashService(_loggerMock!.Object);
+
+        // Act
+        await _washService.PerformWashAsync(_carJob!);
 
         // Assert
         // TODO: This approach could be modified by creating a custom ILogger implementation that records logs to a list and asserting against that.
