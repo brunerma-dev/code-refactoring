@@ -87,5 +87,5 @@ See [ADR-0000-initial-state.md](ADR-0000-initial-state.md)
 - **Definition of Done:** Tests passing; strategies in `Services/`; docs updated.
 
 ## 11) Links
-- **PRs/Commits:** _TBD_  
-- **Related ADRs:** ADR-0000 (Initial State)  
+- **PRs/Commits:** [Refactor \*WashService.cs, adopting Strategy pattern](https://github.com/brunerma-dev/code-refactoring/pull/6)
+- **Related ADRs:** [ADR-0000](ADR-0000-initial-state.md) (Initial State)  
