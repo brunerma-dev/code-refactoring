@@ -24,11 +24,14 @@ Dockerfile        text eol=lf
 *.sln             text eol=lf
 *.cs              text eol=lf
 *.csproj          text eol=lf
+*.csx			  text eol=lf
 *.props           text eol=lf
 *.targets         text eol=lf
+*.config		  text eol=lf
 *.json            text eol=lf
 *.yml             text eol=lf
 *.yaml            text eol=lf
+*.xml			  text eol=lf
 *.md              text eol=lf
 *.editorconfig    text eol=lf
 *.gitignore       text eol=lf
@@ -46,25 +49,25 @@ Dockerfile        text eol=lf
 *.7z              -text
 
 # Images / media
-*.png             -text
-*.jpg             -text
-*.jpeg            -text
-*.gif             -text
-*.ico             -text
-*.webp            -text
-*.avif            -text
-*.bmp             -text
-*.tif             -text
-*.tiff            -text
+*.png             binary
+*.jpg             binary
+*.jpeg            binary
+*.gif             binary
+*.ico             binary
+*.webp            binary
+*.avif            binary
+*.bmp             binary
+*.tif             binary
+*.tiff            binary
 # (SVG is XML text, but often safer as binary to avoid EOL changes)
-*.svg             -text
+*.svg             binary
 
 # Fonts
-*.woff            -text
-*.woff2           -text
-*.ttf             -text
-*.otf             -text
-*.eot             -text
+*.woff            binary
+*.woff2           binary
+*.ttf             binary
+*.otf             binary
+*.eot             binary
 
 # Docs / design files
 *.pdf             -text
