@@ -1,4 +1,5 @@
-﻿// TODO: Consistent file header containing copyright.
+// TODO: Consistent file header containing copyright.
+
 using CarWashProcessor.Models;
 
 namespace CarWashProcessor.Services;
