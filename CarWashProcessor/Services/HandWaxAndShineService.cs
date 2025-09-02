@@ -23,10 +23,16 @@ public class HandWaxAndShineService
     /// <param name="logger">
 	/// Logger instance for logging information related to the HandWaxAndShineService.
 	/// </param>
+    /// <exception cref="ArgumentNullException">
+    /// Thrown if the <paramref name="logger"/> parameter is null.
+    /// </exception>
     public HandWaxAndShineService(ILogger<HandWaxAndShineService> logger)
 	{
+        // Defensive programming, validate input parameters in constructor, or fast fail, followed by assignments.
+        ArgumentNullException.ThrowIfNull(logger, nameof(logger));
+
         // Set services
-        _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+        _logger = logger;
     }
 
     /// <summary>
@@ -38,9 +44,13 @@ public class HandWaxAndShineService
     /// <returns>
     /// A task representing the asynchronous operation of hand waxing and shining.
     /// </returns>
+    /// <exception cref="ArgumentNullException">
+    /// Thrown if the <paramref name="carJob"/> parameter is null.
+    /// </exception>
     public async Task HandWaxAndShineAsync(CarJob carJob)
 	{
-        // TODO: Bug. Defensive programming, validate input parameters on public methods. (need this for all public methods)
+        // Defensive programming. Validate input parameters on public methods.
+        ArgumentNullException.ThrowIfNull(carJob, nameof(carJob));
 
         // Wait a second (simulating addon-specific work).
         await Task.Delay(TimeSpan.FromSeconds(1));

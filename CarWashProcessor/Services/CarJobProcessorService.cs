@@ -15,6 +15,31 @@ public class CarJobProcessorService
     private readonly HandWaxAndShineService _handWaxAndShineService;
 
     // TODO: DIP. Use interfaces instead of concrete classes, group comparable services into collections to reduce constructor parameters.
+
+    /// <summary>
+    /// Constructor for CarJobProcessorService.
+    /// </summary>
+    /// <param name="basicWashService">
+    /// The basic wash service to be used for processing car jobs.
+    /// </param>
+    /// <param name="awesomeWashService">
+    /// The awesome wash service to be used for processing car jobs.
+    /// </param>
+    /// <param name="toTheMaxWashService">
+    /// The to-the-max wash service to be used for processing car jobs.
+    /// </param>
+    /// <param name="tireShineService">
+    /// The tire shine service to be used for processing car jobs.
+    /// </param>
+    /// <param name="interiorCleanService">
+    /// The interior clean service to be used for processing car jobs.
+    /// </param>
+    /// <param name="handWaxAndShineService">
+    /// The hand wax and shine service to be used for processing car jobs.
+    /// </param>
+    /// <exception cref="ArgumentNullException">
+    /// Thrown if any of the service parameters are null.
+    /// </exception>
     public CarJobProcessorService(
         BasicWashService basicWashService,
         AwesomeWashService awesomeWashService,
@@ -24,6 +49,14 @@ public class CarJobProcessorService
         HandWaxAndShineService handWaxAndShineService
     )
     {
+        // Defensive programming, validate input parameters in constructor, or fast fail, followed by assignments.
+        ArgumentNullException.ThrowIfNull(basicWashService, nameof(basicWashService));
+        ArgumentNullException.ThrowIfNull(awesomeWashService, nameof(awesomeWashService));
+        ArgumentNullException.ThrowIfNull(toTheMaxWashService, nameof(toTheMaxWashService));
+        ArgumentNullException.ThrowIfNull(tireShineService, nameof(tireShineService));
+        ArgumentNullException.ThrowIfNull(interiorCleanService, nameof(interiorCleanService));
+        ArgumentNullException.ThrowIfNull(handWaxAndShineService, nameof(handWaxAndShineService));
+
         // Set services
         _basicWashService = basicWashService;
         _awesomeWashService = awesomeWashService;
@@ -42,12 +75,18 @@ public class CarJobProcessorService
     /// <returns>
     /// A task representing the asynchronous operation of processing the car job.
     /// </returns>
+    /// <exception cref="ArgumentNullException">
+    /// Thrown if the <paramref name="carJob"/> parameter is null.
+    /// </exception>
     /// <remarks>
     /// TODO: This method is called by the Worker, but doesn't pass the CancellationToken. If the service is shutting down, ongoing tasks 
     /// aren't going to receive the cancellation request. I can't modify Worker.cs, so I can't change this function signature.
     /// </remarks>
     public async Task ProcessCarJobAsync(CarJob carJob)
     {
+        // Defensive programming. Validate input parameters on public methods.
+        ArgumentNullException.ThrowIfNull(carJob, nameof(carJob));
+
         // Step 1: Determine which wash service is requested, and perform it.
         /* TODO: Optimize wash services. 
          * All *WashService classes have a single public method, accepting the CarJob. These are strategies for washing a car. */

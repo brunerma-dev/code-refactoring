@@ -21,10 +21,25 @@ public class BasicWashServiceTests
     }
 
     [TestMethod]
+    public void Ctor_WhenLoggerIsNull_ThrowsArgumentNullException()
+    {
+        var exception = Assert.ThrowsException<ArgumentNullException>(() => _washService = new BasicWashService(null!));
+        Assert.AreEqual("logger", exception.ParamName);
+    }
+
+    [TestMethod]
     public void Ctor_WhenAllArgumentsProvided_Succeeds()
     {
         _washService = new BasicWashService(_loggerMock!.Object);
         Assert.IsTrue(_washService is not null);
+    }
+
+    [TestMethod]
+    public async Task DoBasicWashAsync_WhenCarJobIsNull_ThrowsArgumentNullException()
+    {
+        _washService = new BasicWashService(_loggerMock!.Object);
+        var exception = await Assert.ThrowsExceptionAsync<ArgumentNullException>(async () => await _washService.DoBasicWashAsync(null!));
+        Assert.AreEqual("carJob", exception.ParamName);
     }
 
     [TestMethod]

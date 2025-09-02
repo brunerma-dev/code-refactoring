@@ -25,10 +25,16 @@ public class ToTheMaxWashService
     /// <param name="logger">
     /// Logger instance for logging information related to the ToTheMaxWashService.
     /// </param>
+    /// <exception cref="ArgumentNullException">
+    /// Thrown if the <paramref name="logger"/> parameter is null.
+    /// </exception>
 	public ToTheMaxWashService(ILogger<ToTheMaxWashService> logger)
 	{
+        // Defensive programming, validate input parameters in constructor, or fast fail, followed by assignments.
+        ArgumentNullException.ThrowIfNull(logger, nameof(logger));
+
         // Set services
-        _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+        _logger = logger;
     }
 
     /// <summary>
@@ -40,9 +46,13 @@ public class ToTheMaxWashService
     /// <returns>
     /// A task representing the asynchronous operation of performing the "To The Max" wash.
     /// </returns>
+    /// <exception cref="ArgumentNullException">
+    /// Thrown if the <paramref name="carJob"/> parameter is null.
+    /// </exception>
     public async Task DoToTheMaxWashAsync(CarJob carJob)
 	{
-        // TODO: Bug. Defensive programming, validate input parameters on public methods. (need this for all public methods)
+        // Defensive programming. Validate input parameters on public methods.
+        ArgumentNullException.ThrowIfNull(carJob, nameof(carJob));
 
         // Wait a second (simulating wash type-specific work).
         await Task.Delay(TimeSpan.FromSeconds(1));

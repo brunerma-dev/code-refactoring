@@ -1,4 +1,4 @@
-﻿using CarWashProcessor.Models;
+using CarWashProcessor.Models;
 using CarWashProcessor.Services;
 using Microsoft.Extensions.Logging;
 using Moq;
@@ -21,10 +21,25 @@ namespace CarWashProcessor.UnitTests.Services
         }
 
         [TestMethod]
+        public void Ctor_WhenLoggerIsNull_ThrowsArgumentNullException()
+        {
+            var exception = Assert.ThrowsException<ArgumentNullException>(() => _washService = new TireShineService(null!));
+            Assert.AreEqual("logger", exception.ParamName);
+        }
+
+        [TestMethod]
         public void Ctor_WhenAllArgumentsProvided_Succeeds()
         {
             _washService = new TireShineService(_loggerMock!.Object);
             Assert.IsTrue(_washService is not null);
+        }
+
+        [TestMethod]
+        public async Task ShineTiresAsync_WhenCarJobIsNull_ThrowsArgumentNullException()
+        {
+            _washService = new TireShineService(_loggerMock!.Object);
+            var exception = await Assert.ThrowsExceptionAsync<ArgumentNullException>(async () => await _washService.ShineTiresAsync(null!));
+            Assert.AreEqual("carJob", exception.ParamName);
         }
 
         [TestMethod]
