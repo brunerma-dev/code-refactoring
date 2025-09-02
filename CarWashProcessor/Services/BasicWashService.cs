@@ -1,4 +1,4 @@
-﻿// TODO: Consistent file header containing copyright.
+// TODO: Consistent file header containing copyright.
 
 using CarWashProcessor.Models;
 
@@ -27,8 +27,8 @@ public class BasicWashService
 	/// </param>
     public BasicWashService(ILogger<BasicWashService> logger)
 	{
-		// Set services
-		_logger = logger; // TODO: Fast fail if dependency injection passed a null constructor parameter. (Need this across the board.)
+        // Set services
+        _logger = logger ?? throw new ArgumentNullException(nameof(logger));
     }
 
     /// <summary>

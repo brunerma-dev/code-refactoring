@@ -27,8 +27,8 @@ public class ToTheMaxWashService
     /// </param>
 	public ToTheMaxWashService(ILogger<ToTheMaxWashService> logger)
 	{
-		// Set services
-		_logger = logger; // TODO: Fast fail if dependency injection passed a null constructor parameter. (Need this across the board.)
+        // Set services
+        _logger = logger ?? throw new ArgumentNullException(nameof(logger));
     }
 
     /// <summary>
