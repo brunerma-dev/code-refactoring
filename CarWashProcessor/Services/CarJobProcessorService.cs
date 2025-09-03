@@ -1,15 +1,18 @@
-// Copyright (c) 2025 Car Wash Processor, All Rights Reserved
+// Copyright (c) 2025 Car Wash Processor, All Rights Reserved.
 
-using CarWashProcessor.Models;
+using CarWashProcessor.Application.Abstractions.Resolution; // For IServiceResolver
+using CarWashProcessor.Domain.Abstractions.Services;        // For IWashServiceStrategy
+using CarWashProcessor.Models;                              // For CarJob, EServiceWash, EServiceAddon
 
-namespace CarWashProcessor.Services;
+namespace CarWashProcessor.Services;                        // Namespace for the service, and unrefactored services (TireShineService, InteriorCleanService, HandWaxAndShineService)
 
 public class CarJobProcessorService
 {
-    /* TODO: Replace concrete injected service fields with interfaces. */
-    private readonly BasicWashService _basicWashService;
-    private readonly AwesomeWashService _awesomeWashService;
-    private readonly ToTheMaxWashService _toTheMaxWashService;
+    /// <summary>
+    /// Resolver to obtain the appropriate wash service strategy based on the requested wash type.
+    /// </summary>
+    private readonly IServiceResolver<EServiceWash, IWashServiceStrategy> _washServiceResolver;
+
     private readonly TireShineService _tireShineService;
     private readonly InteriorCleanService _interiorCleanService;
     private readonly HandWaxAndShineService _handWaxAndShineService;
@@ -19,15 +22,6 @@ public class CarJobProcessorService
     /// <summary>
     /// Constructor for CarJobProcessorService.
     /// </summary>
-    /// <param name="basicWashService">
-    /// The basic wash service to be used for processing car jobs.
-    /// </param>
-    /// <param name="awesomeWashService">
-    /// The awesome wash service to be used for processing car jobs.
-    /// </param>
-    /// <param name="toTheMaxWashService">
-    /// The to-the-max wash service to be used for processing car jobs.
-    /// </param>
     /// <param name="tireShineService">
     /// The tire shine service to be used for processing car jobs.
     /// </param>
@@ -41,26 +35,26 @@ public class CarJobProcessorService
     /// Thrown if any of the service parameters are null.
     /// </exception>
     public CarJobProcessorService(
-        BasicWashService basicWashService,
-        AwesomeWashService awesomeWashService,
-        ToTheMaxWashService toTheMaxWashService,
+        IServiceResolver<EServiceWash, IWashServiceStrategy> washResolver,
         TireShineService tireShineService,
         InteriorCleanService interiorCleanService,
         HandWaxAndShineService handWaxAndShineService
     )
     {
-        // Defensive programming, validate input parameters in constructor, or fast fail, followed by assignments.
-        ArgumentNullException.ThrowIfNull(basicWashService, nameof(basicWashService));
-        ArgumentNullException.ThrowIfNull(awesomeWashService, nameof(awesomeWashService));
-        ArgumentNullException.ThrowIfNull(toTheMaxWashService, nameof(toTheMaxWashService));
+        /* Defensive programming. 
+         * Validate input parameters in constructor, or fast fail, followed by assignments. A
+         * more concise way is to use a null-coalescing assignment:
+         * 
+         * e.g. _washServiceResolver = washResolver ?? throw new ArgumentNullException(nameof(washResolver));
+         */
+
+        ArgumentNullException.ThrowIfNull(washResolver, nameof(washResolver));
         ArgumentNullException.ThrowIfNull(tireShineService, nameof(tireShineService));
         ArgumentNullException.ThrowIfNull(interiorCleanService, nameof(interiorCleanService));
         ArgumentNullException.ThrowIfNull(handWaxAndShineService, nameof(handWaxAndShineService));
 
-        // Set services
-        _basicWashService = basicWashService;
-        _awesomeWashService = awesomeWashService;
-        _toTheMaxWashService = toTheMaxWashService;
+        // Assign service instances to private readonly fields.
+        _washServiceResolver = washResolver;
         _tireShineService = tireShineService;
         _interiorCleanService = interiorCleanService;
         _handWaxAndShineService = handWaxAndShineService;
@@ -70,69 +64,54 @@ public class CarJobProcessorService
     /// Processes a car job by performing the requested wash service and any additional addons.
     /// </summary>
     /// <param name="carJob">
-    /// The car job to be processed, containing details about the customer, car make, requested wash service, and any additional addons.
+    /// The car job to be processed.
+    /// </param>
+    /// <param name="cancellationToken">
+    /// Optional. Cancellation token to cancel the operation.
     /// </param>
     /// <returns>
     /// A task representing the asynchronous operation of processing the car job.
     /// </returns>
-    /// <exception cref="ArgumentNullException">
-    /// Thrown if the <paramref name="carJob"/> parameter is null.
-    /// </exception>
     /// <remarks>
-    /// TODO: This method is called by the Worker, but doesn't pass the CancellationToken. If the service is shutting down, ongoing tasks 
-    /// aren't going to receive the cancellation request. I can't modify Worker.cs, so I can't change this function signature.
+    /// Per the requirements, <see cref="Worker"/> was not modified, so the cancelation token is
+    /// not passed, but included as an optional parameter for future extensibility.
     /// </remarks>
-    public async Task ProcessCarJobAsync(CarJob carJob)
+    public async Task ProcessCarJobAsync(CarJob carJob, CancellationToken cancellationToken = default)
     {
-        // Defensive programming. Validate input parameters on public methods.
+        // Defensive programming. 
         ArgumentNullException.ThrowIfNull(carJob, nameof(carJob));
 
-        // Step 1: Determine which wash service is requested, and perform it.
-        /* TODO: Optimize wash services. 
-         * All *WashService classes have a single public method, accepting the CarJob. These are strategies for washing a car. */
-        switch (carJob.ServiceWash)
-        {
-            case EServiceWash.Basic:
-                // Do basic wash
-                await _basicWashService.DoBasicWashAsync(carJob);
-                break;
-            case EServiceWash.Awesome:
-                // Do awesome wash
-                await _awesomeWashService.DoAwesomeWashAsync(carJob);
-                break;
-            case EServiceWash.ToTheMax:
-                // Do to the max wash
-                await _toTheMaxWashService.DoToTheMaxWashAsync(carJob);
-                break;
-            default:
-                // Throw error
-                throw new InvalidOperationException(
-                    $"Wash service ({carJob.ServiceWash}) not recognized."
-                );
-        }
+        // Get the appropriate wash service (strategy) based on the requested wash service.
+        var washStrategy = _washServiceResolver.Resolve(carJob.ServiceWash);
+
+        // Perform the wash service.
+        await washStrategy.PerformWashAsync(carJob, cancellationToken);
 
         // Step 2: Process any addons requested.
 
         /* TODO: Optimize ServiceAddons processing. 
          * These could also be strategies with a resolver/factory, but does the processing order matter? This represents real-world 
          * actions, so order might be required (pipeline, command, etc.). If order doesn't matter, we could do them in parallel, but 
-         * that doesn't map to the real-world. We could do them sequentially, with a foreach loop.
+         * that doesn't map to the real-world. We could do them sequentially, with a foreach loop, but that doesn't consider order, 
+         * or duplicate add-ons (should be handled upstream when constructing the CarJob, but just in case).
          */
 
         // Step 2.a: Check if tire shine
-        if (carJob.ServiceAddons.Contains(EServiceAddon.TireShine))         // Scans the list of addons each time. (O(n) time)
+        if (carJob.ServiceAddons.Contains(EServiceAddon.TireShine))         // Scans the list of addons each time (inefficient). (O(n) time)
         {
             // Shine tires
             await _tireShineService.ShineTiresAsync(carJob);
         }
+
         // Step 2.b: Check if exterior clean
-        if (carJob.ServiceAddons.Contains(EServiceAddon.InteriorClean))		// Scans the list of addons each time. (O(n) time)
+        if (carJob.ServiceAddons.Contains(EServiceAddon.InteriorClean))     // Scans the list of addons each time (inefficient). (O(n) time)
         {
             // Clean interior
             await _interiorCleanService.CleanInteriorAsync(carJob);
         }
+
         // Step 2.c: Check if hand wax and shine
-        if (carJob.ServiceAddons.Contains(EServiceAddon.HandWaxAndShine))	// Scans the list of addons each time. (O(n) time)
+        if (carJob.ServiceAddons.Contains(EServiceAddon.HandWaxAndShine))   // Scans the list of addons each time (inefficient). (O(n) time)
         {
             // Hand wax and shine
             await _handWaxAndShineService.HandWaxAndShineAsync(carJob);

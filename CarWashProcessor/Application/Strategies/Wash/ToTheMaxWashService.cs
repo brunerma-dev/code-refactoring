@@ -1,22 +1,21 @@
-// Copyright (c) 2025 Car Wash Processor, All Rights Reserved
+// Copyright (c) 2025 Car Wash Processor, All Rights Reserved.
 
-using CarWashProcessor.Models;
+using CarWashProcessor.Application.Abstractions.Registration;   // For WashTypeAttribute
+using CarWashProcessor.Domain.Abstractions.Services;            // For IWashServiceStrategy
+using CarWashProcessor.Models;                                  // For CarJob, EServiceWash
 
-namespace CarWashProcessor.Services;
+namespace CarWashProcessor.Application.Strategies.Wash;
 
 /// <summary>
 /// Service responsible for performing a "To The Max" car wash.
 /// </summary>
+[WashType(EServiceWash.ToTheMax)]   // Facilitates automatic registration and resolution of this service for the ToTheMax wash type.
 public class ToTheMaxWashService : IWashServiceStrategy
 {
     /// <summary>
     /// Logger instance for logging information related to the ToTheMaxWashService.
     /// </summary>
     private readonly ILogger<ToTheMaxWashService> _logger;
-
-
-    /// <inheritdoc />
-    public EServiceWash Key => EServiceWash.ToTheMax;
 
     /// <summary>
     /// Constructor for ToTheMaxWashService.
@@ -29,7 +28,7 @@ public class ToTheMaxWashService : IWashServiceStrategy
     /// </exception>
 	public ToTheMaxWashService(ILogger<ToTheMaxWashService> logger)
 	{
-        // Defensive programming, validate input parameters in constructor, or fast fail, followed by assignments.
+        // Defensive programming.
         ArgumentNullException.ThrowIfNull(logger, nameof(logger));
 
         // Set services
@@ -51,21 +50,15 @@ public class ToTheMaxWashService : IWashServiceStrategy
     public async Task DoToTheMaxWashAsync(CarJob carJob) => await PerformWashAsync(carJob);
 
     /// <inheritdoc />
-    public async Task PerformWashAsync(CarJob carJob)
+    public async Task PerformWashAsync(CarJob carJob, CancellationToken cancellationToken = default)
     {
         // Defensive programming. Validate input parameters on public methods.
         ArgumentNullException.ThrowIfNull(carJob, nameof(carJob));
 
         // Wait a second (simulating wash type-specific work).
-        await Task.Delay(TimeSpan.FromSeconds(1));
+        await Task.Delay(TimeSpan.FromSeconds(1), cancellationToken);
 
         // Log information
-        /* TODO: Evaluate CA1848: Use LoggerMessage.Define to pre-define logging messages for better performance. 
-         * This is a suggestion from code analysis, but for simplicity and readability in this example, we are 
-         * using the straightforward approach as it can be argued this does not invalidate the requirement: 
-         * "The system is reasonably performant". */
-#pragma warning disable CA1848 // Use the LoggerMessage delegates
         _logger.LogInformation("--> To The Max wash performed for customer {CustomerId}!", carJob.CustomerId);
-#pragma warning restore CA1848 // Use the LoggerMessage delegates
     }
 }

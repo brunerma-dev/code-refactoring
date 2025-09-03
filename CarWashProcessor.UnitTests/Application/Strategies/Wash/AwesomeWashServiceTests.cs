@@ -1,56 +1,59 @@
 // Copyright (c) 2025 Car Wash Processor, All Rights Reserved
 
-using CarWashProcessor.Models;
-using CarWashProcessor.Services;
-using Microsoft.Extensions.Logging;
-using Moq;
 using System.Collections.Immutable;
 
-namespace CarWashProcessor.UnitTests.Services;
+using CarWashProcessor.Application.Strategies.Wash;
+using CarWashProcessor.Models;
+
+using Microsoft.Extensions.Logging;
+
+using Moq;
+
+namespace CarWashProcessor.UnitTests.Application.Strategies.Wash;
 
 [TestClass]
-public class ToTheMaxWashServiceTests
+public class AwesomeWashServiceTests
 {
-    private Mock<ILogger<ToTheMaxWashService>>? _loggerMock = null;
-    private ToTheMaxWashService? _washService = null;
+    private Mock<ILogger<AwesomeWashService>>? _loggerMock = null;
+    private AwesomeWashService? _washService = null;
     private CarJob? _carJob = null;
 
     [TestInitialize]
     public void TestInit()
     {
-        _loggerMock = new Mock<ILogger<ToTheMaxWashService>>();
+        // Common setup
+        _loggerMock = new Mock<ILogger<AwesomeWashService>>();
         _carJob = new CarJob(8675309, ECarMake.Ford, EServiceWash.Awesome, new ImmutableArray<EServiceAddon>());
     }
 
     [TestMethod]
     public void Ctor_WhenLoggerIsNull_ThrowsArgumentNullException()
     {
-        var exception = Assert.ThrowsException<ArgumentNullException>(() => _washService = new ToTheMaxWashService(null!));
+        // Act & Assert
+        var exception = Assert.ThrowsException<ArgumentNullException>(() => _washService = new AwesomeWashService(null!));
         Assert.AreEqual("logger", exception.ParamName);
     }
 
     [TestMethod]
     public void Ctor_WhenAllArgumentsProvided_Succeeds()
     {
-        _washService = new ToTheMaxWashService(_loggerMock!.Object);
+        // Act
+        _washService = new AwesomeWashService(_loggerMock!.Object);
+
+        // Assert
         Assert.IsTrue(_washService is not null);
     }
 
     [TestMethod]
-    public void Key_Property_ReturnsExpectedValue()
+    public async Task DoAwesomeWashAsync_WhenCarJobIsNull_ThrowsArgumentNullException()
     {
+        // Arrange
+        _washService = new AwesomeWashService(_loggerMock!.Object);
+
         // Act
-        _washService = new ToTheMaxWashService(_loggerMock!.Object);
+        var exception = await Assert.ThrowsExceptionAsync<ArgumentNullException>(async () => await _washService.DoAwesomeWashAsync(null!));
 
         // Assert
-        Assert.AreEqual(EServiceWash.ToTheMax, _washService.Key);
-    }
-
-    [TestMethod]
-    public async Task DoAwesomeWashAsync_c_WhenCarJobIsNull_ThrowsArgumentNullException()
-    {
-        _washService = new ToTheMaxWashService(_loggerMock!.Object);
-        var exception = await Assert.ThrowsExceptionAsync<ArgumentNullException>(async () => await _washService.DoToTheMaxWashAsync(null!));
         Assert.AreEqual("carJob", exception.ParamName);
     }
 
@@ -58,10 +61,10 @@ public class ToTheMaxWashServiceTests
     public async Task DoAwesomeWashAsync_WhenCalled_PerformsWashAndLogs()
     {
         // Arrange
-        _washService = new ToTheMaxWashService(_loggerMock!.Object);
+        _washService = new AwesomeWashService(_loggerMock!.Object);
 
         // Act
-        await _washService.DoToTheMaxWashAsync(_carJob!);
+        await _washService.DoAwesomeWashAsync(_carJob!);
 
         // Assert
         // TODO: This approach could be modified by creating a custom ILogger implementation that records logs to a list and asserting against that.
@@ -69,17 +72,30 @@ public class ToTheMaxWashServiceTests
             x => x.Log(
                 LogLevel.Information,
                 It.IsAny<EventId>(),
-                It.Is<It.IsAnyType>((v, t) => v.ToString()!.Contains("--> To The Max wash performed for customer " + _carJob!.CustomerId)),
+                It.Is<It.IsAnyType>((v, t) => v.ToString()!.Contains("--> Awesome wash performed for customer " + _carJob!.CustomerId)),
                 It.IsAny<Exception>(),
                 It.IsAny<Func<It.IsAnyType, Exception?, string>>()),
             Times.Once);
     }
 
     [TestMethod]
+    public async Task PerformWashAsync_WhenCarJobIsNull_ThrowsArgumentNullException()
+    {
+        // Arrange
+        _washService = new AwesomeWashService(_loggerMock!.Object);
+
+        // Act
+        var exception = await Assert.ThrowsExceptionAsync<ArgumentNullException>(async () => await _washService!.PerformWashAsync(null!));
+
+        // Assert
+        Assert.AreEqual("carJob", exception.ParamName);
+    }
+
+    [TestMethod]
     public async Task PerformWashAsync_WhenCalled_PerformsWashAndLogs()
     {
         // Arrange
-        _washService = new ToTheMaxWashService(_loggerMock!.Object);
+        _washService = new AwesomeWashService(_loggerMock!.Object);
 
         // Act
         await _washService.PerformWashAsync(_carJob!);
@@ -90,7 +106,7 @@ public class ToTheMaxWashServiceTests
             x => x.Log(
                 LogLevel.Information,
                 It.IsAny<EventId>(),
-                It.Is<It.IsAnyType>((v, t) => v.ToString()!.Contains("--> To The Max wash performed for customer " + _carJob!.CustomerId)),
+                It.Is<It.IsAnyType>((v, t) => v.ToString()!.Contains("--> Awesome wash performed for customer " + _carJob!.CustomerId)),
                 It.IsAny<Exception>(),
                 It.IsAny<Func<It.IsAnyType, Exception?, string>>()),
             Times.Once);
