@@ -13,11 +13,10 @@ public class CarJobProcessorService
     /// </summary>
     private readonly IServiceResolver<EServiceWash, IWashServiceStrategy> _washServiceResolver;
 
-    private readonly TireShineService _tireShineService;
-    private readonly InteriorCleanService _interiorCleanService;
-    private readonly HandWaxAndShineService _handWaxAndShineService;
-
-    // TODO: DIP. Use interfaces instead of concrete classes, group comparable services into collections to reduce constructor parameters.
+    /// <summary>
+    /// Resolver to obtain the appropriate addon service strategy based on the requested addon type.
+    /// </summary>
+    private readonly IServiceResolver<EServiceAddon, IAddonServiceStrategy> _addonServiceResolver;
 
     /// <summary>
     /// Constructor for CarJobProcessorService.
@@ -36,9 +35,7 @@ public class CarJobProcessorService
     /// </exception>
     public CarJobProcessorService(
         IServiceResolver<EServiceWash, IWashServiceStrategy> washResolver,
-        TireShineService tireShineService,
-        InteriorCleanService interiorCleanService,
-        HandWaxAndShineService handWaxAndShineService
+        IServiceResolver<EServiceAddon, IAddonServiceStrategy> addonResolver
     )
     {
         /* Defensive programming. 
@@ -49,15 +46,11 @@ public class CarJobProcessorService
          */
 
         ArgumentNullException.ThrowIfNull(washResolver, nameof(washResolver));
-        ArgumentNullException.ThrowIfNull(tireShineService, nameof(tireShineService));
-        ArgumentNullException.ThrowIfNull(interiorCleanService, nameof(interiorCleanService));
-        ArgumentNullException.ThrowIfNull(handWaxAndShineService, nameof(handWaxAndShineService));
+        ArgumentNullException.ThrowIfNull(addonResolver, nameof(addonResolver));
 
         // Assign service instances to private readonly fields.
         _washServiceResolver = washResolver;
-        _tireShineService = tireShineService;
-        _interiorCleanService = interiorCleanService;
-        _handWaxAndShineService = handWaxAndShineService;
+        _addonServiceResolver = addonResolver;
     }
 
     /// <summary>
@@ -90,31 +83,18 @@ public class CarJobProcessorService
         // Step 2: Process any addons requested.
 
         /* TODO: Optimize ServiceAddons processing. 
-         * These could also be strategies with a resolver/factory, but does the processing order matter? This represents real-world 
-         * actions, so order might be required (pipeline, command, etc.). If order doesn't matter, we could do them in parallel, but 
-         * that doesn't map to the real-world. We could do them sequentially, with a foreach loop, but that doesn't consider order, 
-         * or duplicate add-ons (should be handled upstream when constructing the CarJob, but just in case).
+         * Business (interviewer) requirements are not clear on how to handle duplicates or order of operations. 
+         * Proceeding with a simple approach that handles duplicates and processes sequentially in order.
+         * Future improvements could include:
+         * - If order doesn't matter, this solution suffices
+         * - If order matters, consider using a more complex structure (composer, runtime configuration in appSettings.json, etc.) to maintain order and handle duplicates.
+         * - If duplicates should be processed multiple times, remove Distinct() and handle accordingly.
          */
 
-        // Step 2.a: Check if tire shine
-        if (carJob.ServiceAddons.Contains(EServiceAddon.TireShine))         // Scans the list of addons each time (inefficient). (O(n) time)
+        foreach (var addon in carJob.ServiceAddons.Distinct()) // O(n) time to deduplicate, O(m) space for distinct addons.
         {
-            // Shine tires
-            await _tireShineService.ShineTiresAsync(carJob);
-        }
-
-        // Step 2.b: Check if exterior clean
-        if (carJob.ServiceAddons.Contains(EServiceAddon.InteriorClean))     // Scans the list of addons each time (inefficient). (O(n) time)
-        {
-            // Clean interior
-            await _interiorCleanService.CleanInteriorAsync(carJob);
-        }
-
-        // Step 2.c: Check if hand wax and shine
-        if (carJob.ServiceAddons.Contains(EServiceAddon.HandWaxAndShine))   // Scans the list of addons each time (inefficient). (O(n) time)
-        {
-            // Hand wax and shine
-            await _handWaxAndShineService.HandWaxAndShineAsync(carJob);
+            var addonStrategy = _addonServiceResolver.Resolve(addon); // O(1) time to resolve via keyed DI.
+            await addonStrategy.PerformAddonAsync(carJob, cancellationToken); // Perform the addon.
         }
     }
 }

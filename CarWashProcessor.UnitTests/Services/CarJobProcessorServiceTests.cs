@@ -1,12 +1,9 @@
 // Copyright (c) 2025 Car Wash Processor, All Rights Reserved
 
 using CarWashProcessor.Application.Abstractions.Resolution;
-using CarWashProcessor.Application.Strategies.Wash;
 using CarWashProcessor.Domain.Abstractions.Services;
 using CarWashProcessor.Models;
 using CarWashProcessor.Services;
-
-using Microsoft.Extensions.Logging;
 
 using Moq;
 
@@ -25,17 +22,10 @@ namespace CarWashProcessor.UnitTests.Services
          */
         private Mock<IServiceResolver<EServiceWash, IWashServiceStrategy>>? _washServiceResolverMock;
         private Mock<IWashServiceStrategy>? _washServiceStrategyMock;
-        private Mock<ILogger<BasicWashService>>? _basicWashServiceLoggerMock;
-        private Mock<AwesomeWashService>? _awesomeWashServiceMock;
-        private Mock<ILogger<AwesomeWashService>>? _awesomeWashServiceLoggerMock;
-        private Mock<ToTheMaxWashService>? _toTheMaxWashServiceMock;
-        private Mock<ILogger<ToTheMaxWashService>>? _toTheMaxWashServiceLoggerMock;
-        private Mock<TireShineService>? _tireShineServiceMock;
-        private Mock<ILogger<TireShineService>>? _tireShineServiceLoggerMock;
-        private Mock<InteriorCleanService>? _interiorCleanServiceMock;
-        private Mock<ILogger<InteriorCleanService>>? _interiorCleanServiceLoggerMock;
-        private Mock<HandWaxAndShineService>? _handWashAndShineServiceMock;
-        private Mock<ILogger<HandWaxAndShineService>>? _handWashAndShineServiceLoggerMock;
+        private Mock<IServiceResolver<EServiceAddon, IAddonServiceStrategy>>? _addonServiceResolverMock;
+        private Mock<IAddonServiceStrategy>? _addonServiceStrategyMock;
+
+        
         private CarJobProcessorService? _processorService;
         private CarJob? _carJob;
 
@@ -44,13 +34,8 @@ namespace CarWashProcessor.UnitTests.Services
         {
             _washServiceResolverMock = new Mock<IServiceResolver<EServiceWash, IWashServiceStrategy>>(MockBehavior.Strict);
             _washServiceStrategyMock = new Mock<IWashServiceStrategy>(MockBehavior.Strict);
-            _tireShineServiceLoggerMock = new Mock<ILogger<TireShineService>>();
-            _tireShineServiceMock = new Mock<TireShineService>(MockBehavior.Strict, _tireShineServiceLoggerMock.Object);
-            _interiorCleanServiceLoggerMock = new Mock<ILogger<InteriorCleanService>>();
-            _interiorCleanServiceMock = new Mock<InteriorCleanService>(MockBehavior.Strict, _interiorCleanServiceLoggerMock.Object);
-            _handWashAndShineServiceLoggerMock = new Mock<ILogger<HandWaxAndShineService>>();
-            _handWashAndShineServiceMock = new Mock<HandWaxAndShineService>(MockBehavior.Strict, _handWashAndShineServiceLoggerMock.Object);
-
+            _addonServiceResolverMock = new Mock<IServiceResolver<EServiceAddon, IAddonServiceStrategy>>(MockBehavior.Strict);
+            _addonServiceStrategyMock = new Mock<IAddonServiceStrategy>(MockBehavior.Strict);
             _carJob = new CarJob(8675309, ECarMake.Ford, EServiceWash.Awesome, ImmutableArray<EServiceAddon>.Empty);
         }
 
@@ -58,7 +43,7 @@ namespace CarWashProcessor.UnitTests.Services
         public void Ctor_WhenAllArgumentsProvided_Succeeds()
         {
             // Act
-            _processorService = new CarJobProcessorService(_washServiceResolverMock!.Object, _tireShineServiceMock!.Object, _interiorCleanServiceMock!.Object, _handWashAndShineServiceMock!.Object);
+            _processorService = new CarJobProcessorService(_washServiceResolverMock!.Object, _addonServiceResolverMock!.Object);
 
             // Assert
             Assert.IsTrue(_processorService is not null);
@@ -70,7 +55,7 @@ namespace CarWashProcessor.UnitTests.Services
             // Arrange
             _washServiceResolverMock!.Setup(m => m.Resolve(EServiceWash.Basic)).Returns(_washServiceStrategyMock!.Object);
             _washServiceStrategyMock!.Setup(m => m.PerformWashAsync(It.IsAny<CarJob>(), It.IsAny<CancellationToken>())).Returns(Task.CompletedTask).Verifiable();
-            _processorService = new CarJobProcessorService(_washServiceResolverMock!.Object, _tireShineServiceMock!.Object, _interiorCleanServiceMock!.Object, _handWashAndShineServiceMock!.Object);
+            _processorService = new CarJobProcessorService(_washServiceResolverMock!.Object, _addonServiceResolverMock!.Object);
             var carJob = new CarJob(123456, ECarMake.Toyota, EServiceWash.Basic, ImmutableArray<EServiceAddon>.Empty);
 
             // Act
@@ -87,7 +72,7 @@ namespace CarWashProcessor.UnitTests.Services
             // Arrange
             _washServiceResolverMock!.Setup(m => m.Resolve(EServiceWash.Awesome)).Returns(_washServiceStrategyMock!.Object);
             _washServiceStrategyMock!.Setup(m => m.PerformWashAsync(It.IsAny<CarJob>(), It.IsAny<CancellationToken>())).Returns(Task.CompletedTask).Verifiable();
-            _processorService = new CarJobProcessorService(_washServiceResolverMock!.Object, _tireShineServiceMock!.Object, _interiorCleanServiceMock!.Object, _handWashAndShineServiceMock!.Object);
+            _processorService = new CarJobProcessorService(_washServiceResolverMock!.Object, _addonServiceResolverMock!.Object);
             var carJob = new CarJob(123456, ECarMake.Toyota, EServiceWash.Awesome, ImmutableArray<EServiceAddon>.Empty);
 
             // Act
@@ -104,15 +89,15 @@ namespace CarWashProcessor.UnitTests.Services
             // Arrange
             _washServiceResolverMock!.Setup(m => m.Resolve(EServiceWash.ToTheMax)).Returns(_washServiceStrategyMock!.Object);
             _washServiceStrategyMock!.Setup(m => m.PerformWashAsync(It.IsAny<CarJob>(), It.IsAny<CancellationToken>())).Returns(Task.CompletedTask).Verifiable();
-            _processorService = new CarJobProcessorService(_washServiceResolverMock!.Object, _tireShineServiceMock!.Object, _interiorCleanServiceMock!.Object, _handWashAndShineServiceMock!.Object);
+            _processorService = new CarJobProcessorService(_washServiceResolverMock!.Object, _addonServiceResolverMock!.Object);
             var carJob = new CarJob(123456, ECarMake.Toyota, EServiceWash.ToTheMax, ImmutableArray<EServiceAddon>.Empty);
 
             // Act
             await _processorService.ProcessCarJobAsync(carJob);
 
             // Assert
-            _washServiceStrategyMock!.Verify(m => m.PerformWashAsync(It.IsAny<CarJob>(), It.IsAny<CancellationToken>()), Times.Once);
             _washServiceResolverMock.Verify(m => m.Resolve(EServiceWash.ToTheMax), Times.Once);
+            _washServiceStrategyMock!.Verify(m => m.PerformWashAsync(It.IsAny<CarJob>(), It.IsAny<CancellationToken>()), Times.Once);
         }
 
         [TestMethod]
@@ -121,22 +106,22 @@ namespace CarWashProcessor.UnitTests.Services
             // Arrange
             _washServiceResolverMock!.Setup(m => m.Resolve(It.IsAny<EServiceWash>())).Returns(_washServiceStrategyMock!.Object);
             _washServiceStrategyMock!.Setup(m => m.PerformWashAsync(It.IsAny<CarJob>(), It.IsAny<CancellationToken>())).Returns(Task.CompletedTask).Verifiable();
-            _processorService = new CarJobProcessorService(_washServiceResolverMock!.Object, _tireShineServiceMock!.Object, _interiorCleanServiceMock!.Object, _handWashAndShineServiceMock!.Object);
+
+            _addonServiceResolverMock!.Setup(m => m.Resolve(EServiceAddon.TireShine)).Returns(_addonServiceStrategyMock!.Object);
+            _addonServiceStrategyMock!.Setup(m => m.PerformAddonAsync(It.IsAny<CarJob>(), It.IsAny<CancellationToken>())).Returns(Task.CompletedTask).Verifiable();
+
+            _processorService = new CarJobProcessorService(_washServiceResolverMock!.Object, _addonServiceResolverMock!.Object);
             var carJob = new CarJob(123456, ECarMake.Toyota, EServiceWash.Basic, [EServiceAddon.TireShine]);
 
             // Act
             await _processorService.ProcessCarJobAsync(carJob);
 
             // Assert
+            _washServiceResolverMock.Verify(m => m.Resolve(It.IsAny<EServiceWash>()), Times.Once);
             _washServiceStrategyMock.Verify(m => m.PerformWashAsync(It.IsAny<CarJob>(), It.IsAny<CancellationToken>()), Times.Once);
-            _tireShineServiceLoggerMock!.Verify(
-                x => x.Log(
-                    LogLevel.Information,
-                    It.IsAny<EventId>(),
-                    It.Is<It.IsAnyType>((v, t) => v.ToString()!.Contains("--> Tires have been shined for customer")),
-                    It.IsAny<Exception>(),
-                    It.IsAny<Func<It.IsAnyType, Exception?, string>>()),
-                Times.Once);
+
+            _addonServiceResolverMock.Verify(m => m.Resolve(EServiceAddon.TireShine), Times.Once);
+            _addonServiceStrategyMock!.Verify(m => m.PerformAddonAsync(It.IsAny<CarJob>(), It.IsAny<CancellationToken>()), Times.Once);
         }
 
         [TestMethod]
@@ -145,22 +130,22 @@ namespace CarWashProcessor.UnitTests.Services
             // Arrange
             _washServiceResolverMock!.Setup(m => m.Resolve(It.IsAny<EServiceWash>())).Returns(_washServiceStrategyMock!.Object);
             _washServiceStrategyMock!.Setup(m => m.PerformWashAsync(It.IsAny<CarJob>(), It.IsAny<CancellationToken>())).Returns(Task.CompletedTask).Verifiable();
-            _processorService = new CarJobProcessorService(_washServiceResolverMock!.Object, _tireShineServiceMock!.Object, _interiorCleanServiceMock!.Object, _handWashAndShineServiceMock!.Object);
+
+            _addonServiceResolverMock!.Setup(m => m.Resolve(EServiceAddon.InteriorClean)).Returns(_addonServiceStrategyMock!.Object);
+            _addonServiceStrategyMock!.Setup(m => m.PerformAddonAsync(It.IsAny<CarJob>(), It.IsAny<CancellationToken>())).Returns(Task.CompletedTask).Verifiable();
+
+            _processorService = new CarJobProcessorService(_washServiceResolverMock!.Object, _addonServiceResolverMock!.Object);
             var carJob = new CarJob(123456, ECarMake.Toyota, EServiceWash.Basic, [EServiceAddon.InteriorClean]);
 
             // Act
             await _processorService.ProcessCarJobAsync(carJob);
 
             // Assert
+            _washServiceResolverMock.Verify(m => m.Resolve(It.IsAny<EServiceWash>()), Times.Once);
             _washServiceStrategyMock.Verify(m => m.PerformWashAsync(It.IsAny<CarJob>(), It.IsAny<CancellationToken>()), Times.Once);
-            _interiorCleanServiceLoggerMock!.Verify(
-                x => x.Log(
-                    LogLevel.Information,
-                    It.IsAny<EventId>(),
-                    It.Is<It.IsAnyType>((v, t) => v.ToString()!.Contains("--> Interior has been cleaned for customer")),
-                    It.IsAny<Exception>(),
-                    It.IsAny<Func<It.IsAnyType, Exception?, string>>()),
-                Times.Once);
+
+            _addonServiceResolverMock.Verify(m => m.Resolve(EServiceAddon.InteriorClean), Times.Once);
+            _addonServiceStrategyMock!.Verify(m => m.PerformAddonAsync(It.IsAny<CarJob>(), It.IsAny<CancellationToken>()), Times.Once);
         }
 
         [TestMethod]
@@ -169,22 +154,22 @@ namespace CarWashProcessor.UnitTests.Services
             // Arrange
             _washServiceResolverMock!.Setup(m => m.Resolve(It.IsAny<EServiceWash>())).Returns(_washServiceStrategyMock!.Object);
             _washServiceStrategyMock!.Setup(m => m.PerformWashAsync(It.IsAny<CarJob>(), It.IsAny<CancellationToken>())).Returns(Task.CompletedTask).Verifiable();
-            _processorService = new CarJobProcessorService(_washServiceResolverMock!.Object, _tireShineServiceMock!.Object, _interiorCleanServiceMock!.Object, _handWashAndShineServiceMock!.Object);
+
+            _addonServiceResolverMock!.Setup(m => m.Resolve(EServiceAddon.HandWaxAndShine)).Returns(_addonServiceStrategyMock!.Object);
+            _addonServiceStrategyMock!.Setup(m => m.PerformAddonAsync(It.IsAny<CarJob>(), It.IsAny<CancellationToken>())).Returns(Task.CompletedTask).Verifiable();
+
+            _processorService = new CarJobProcessorService(_washServiceResolverMock!.Object, _addonServiceResolverMock!.Object);
             var carJob = new CarJob(123456, ECarMake.Toyota, EServiceWash.Basic, [EServiceAddon.HandWaxAndShine]);
 
             // Act
             await _processorService.ProcessCarJobAsync(carJob);
 
             // Assert
+            _washServiceResolverMock.Verify(m => m.Resolve(It.IsAny<EServiceWash>()), Times.Once);
             _washServiceStrategyMock.Verify(m => m.PerformWashAsync(It.IsAny<CarJob>(), It.IsAny<CancellationToken>()), Times.Once);
-            _handWashAndShineServiceLoggerMock!.Verify(
-                x => x.Log(
-                    LogLevel.Information,
-                    It.IsAny<EventId>(),
-                    It.Is<It.IsAnyType>((v, t) => v.ToString()!.Contains("--> Hand waxed and shined for customer")),
-                    It.IsAny<Exception>(),
-                    It.IsAny<Func<It.IsAnyType, Exception?, string>>()),
-                Times.Once);
+
+            _addonServiceResolverMock.Verify(m => m.Resolve(EServiceAddon.HandWaxAndShine), Times.Once);
+            _addonServiceStrategyMock!.Verify(m => m.PerformAddonAsync(It.IsAny<CarJob>(), It.IsAny<CancellationToken>()), Times.Once);
         }
     }
 }

@@ -1,16 +1,16 @@
-// Copyright (c) 2025 Car Wash Processor, All Rights Reserved
+// Copyright (c) 2025 Car Wash Processor, All Rights Reserved.
 
-using CarWashProcessor.Models;
+using CarWashProcessor.Application.Abstractions.Registration;   // For AddonTypeAttribute
+using CarWashProcessor.Domain.Abstractions.Services;            // For IAddonServiceStrategy
+using CarWashProcessor.Models;                                  // For CarJob, EServiceAddon
 
-namespace CarWashProcessor.Services;
+namespace CarWashProcessor.Application.Strategies.Addons;
 
 /// <summary>
-/// Service responsible for hand waxing and shining as an addon service.
+/// Service (Addon Strategy) responsible for hand waxing and shining as an addon service.
 /// </summary>
-/// <remarks>
-/// TODO: Each addon service has identical structure. Depending on requirements (execution order doesn't matter or it does) this is either a strategy or a command / step.
-/// </remarks>
-public class HandWaxAndShineService
+[AddonType(EServiceAddon.HandWaxAndShine)]
+public class HandWaxAndShineService : IAddonServiceStrategy
 {
     /// <summary>
     /// Logger instance for logging information related to the HandWaxAndShineService.
@@ -28,7 +28,7 @@ public class HandWaxAndShineService
     /// </exception>
     public HandWaxAndShineService(ILogger<HandWaxAndShineService> logger)
 	{
-        // Defensive programming, validate input parameters in constructor, or fast fail, followed by assignments.
+        // Defensive programming.
         ArgumentNullException.ThrowIfNull(logger, nameof(logger));
 
         // Set services
@@ -47,21 +47,19 @@ public class HandWaxAndShineService
     /// <exception cref="ArgumentNullException">
     /// Thrown if the <paramref name="carJob"/> parameter is null.
     /// </exception>
-    public async Task HandWaxAndShineAsync(CarJob carJob)
-	{
+    public async Task HandWaxAndShineAsync(CarJob carJob) => await PerformAddonAsync(carJob);
+
+    /// <inheritdoc />
+    public async Task PerformAddonAsync(CarJob carJob, CancellationToken cancellationToken = default)
+    {
         // Defensive programming. Validate input parameters on public methods.
         ArgumentNullException.ThrowIfNull(carJob, nameof(carJob));
 
         // Wait a second (simulating addon-specific work).
-        await Task.Delay(TimeSpan.FromSeconds(1));
+        await Task.Delay(TimeSpan.FromSeconds(1), cancellationToken);
 
         // Log information
-        /* TODO: Evaluate CA1848: Use LoggerMessage.Define to pre-define logging messages for better performance. 
-         * This is a suggestion from code analysis, but for simplicity and readability in this example, we are 
-         * using the straightforward approach as it can be argued this does not invalidate the requirement: 
-         * "The system is reasonably performant". */
-#pragma warning disable CA1848 // Use the LoggerMessage delegates
         _logger.LogInformation("--> Hand waxed and shined for customer {CustomerId}!", carJob.CustomerId);
-#pragma warning restore CA1848 // Use the LoggerMessage delegates
     }
+
 }
