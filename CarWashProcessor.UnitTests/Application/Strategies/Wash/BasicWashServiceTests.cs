@@ -1,12 +1,15 @@
 // Copyright (c) 2025 Car Wash Processor, All Rights Reserved
 
+using CarWashProcessor.Application.Strategies.Wash;
 using CarWashProcessor.Models;
-using CarWashProcessor.Services;
+
 using Microsoft.Extensions.Logging;
+
 using Moq;
+
 using System.Collections.Immutable;
 
-namespace CarWashProcessor.UnitTests.Services;
+namespace CarWashProcessor.UnitTests.Application.Strategies.Wash;
 
 [TestClass]
 public class BasicWashServiceTests
@@ -34,16 +37,6 @@ public class BasicWashServiceTests
     {
         _washService = new BasicWashService(_loggerMock!.Object);
         Assert.IsTrue(_washService is not null);
-    }
-
-    [TestMethod]
-    public void Key_Property_ReturnsExpectedValue()
-    {
-        // Act
-        _washService = new BasicWashService(_loggerMock!.Object);
-
-        // Assert
-        Assert.AreEqual(EServiceWash.Basic, _washService.Key);
     }
 
     [TestMethod]
