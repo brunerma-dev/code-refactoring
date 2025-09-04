@@ -7,54 +7,52 @@ using Microsoft.Extensions.Logging;
 
 using Moq;
 
-using System.Collections.Immutable;
-
 namespace CarWashProcessor.UnitTests.Application.Strategies.Addon
 {
     [TestClass]
     public class InteriorCleanServiceTests
     {
         private Mock<ILogger<InteriorCleanService>>? _loggerMock = null;
-        private InteriorCleanService? _washService = null;
+        private InteriorCleanService? _addonService = null;
         private CarJob? _carJob = null;
 
         [TestInitialize]
         public void TestInit()
         {
             _loggerMock = new Mock<ILogger<InteriorCleanService>>();
-            _carJob = new CarJob(8675309, ECarMake.Ford, EServiceWash.Awesome, new ImmutableArray<EServiceAddon>());
+            _carJob = new CarJob(8675309, ECarMake.Ford, EServiceWash.Awesome, []);
         }
 
         [TestMethod]
         public void Ctor_WhenLoggerIsNull_ThrowsArgumentNullException()
         {
-            var exception = Assert.ThrowsException<ArgumentNullException>(() => _washService = new InteriorCleanService(null!));
+            var exception = Assert.ThrowsException<ArgumentNullException>(() => _addonService = new InteriorCleanService(null!));
             Assert.AreEqual("logger", exception.ParamName);
         }
 
         [TestMethod]
         public void Ctor_WhenAllArgumentsProvided_Succeeds()
         {
-            _washService = new InteriorCleanService(_loggerMock!.Object);
-            Assert.IsTrue(_washService is not null);
+            _addonService = new InteriorCleanService(_loggerMock!.Object);
+            Assert.IsTrue(_addonService is not null);
         }
 
         [TestMethod]
-        public async Task CleanInteriorAsync_WhenCarJobIsNull_ThrowsArgumentNullException()
+        public async Task PerformAddonAsync_WhenCarJobIsNull_ThrowsArgumentNullException()
         {
-            _washService = new InteriorCleanService(_loggerMock!.Object);
-            var exception = await Assert.ThrowsExceptionAsync<ArgumentNullException>(async () => await _washService.CleanInteriorAsync(null!));
+            _addonService = new InteriorCleanService(_loggerMock!.Object);
+            var exception = await Assert.ThrowsExceptionAsync<ArgumentNullException>(async () => await _addonService.PerformAddonAsync(null!));
             Assert.AreEqual("carJob", exception.ParamName);
         }
 
         [TestMethod]
-        public async Task CleanInteriorAsync_WhenCalled_PerformsWashAndLogs()
+        public async Task PerformAddonAsync_WhenCalled_PerformsWashAndLogs()
         {
             // Arrange
-            _washService = new InteriorCleanService(_loggerMock!.Object);
+            _addonService = new InteriorCleanService(_loggerMock!.Object);
 
             // Act
-            await _washService.CleanInteriorAsync(_carJob!);
+            await _addonService.PerformAddonAsync(_carJob!);
 
             // Assert
             // TODO: This approach could be modified by creating a custom ILogger implementation that records logs to a list and asserting against that.
