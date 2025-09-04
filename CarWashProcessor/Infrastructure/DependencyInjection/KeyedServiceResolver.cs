@@ -13,22 +13,20 @@ namespace CarWashProcessor.Infrastructure.DependencyInjection
     /// <typeparam name="TService">
     /// The type of the service to be resolved. Must be a reference type.
     /// </typeparam>
-    public sealed class KeyedServiceResolver<TKey, TService> : IServiceResolver<TKey, TService>
+    /// <remarks>
+    /// Initializes a new instance of the <see cref="KeyedServiceResolver{TKey, TService}"/> class.
+    /// </remarks>
+    /// <param name="serviceProvider">
+    /// The service provider used to resolve services.
+    /// </param>
+    public sealed class KeyedServiceResolver<TKey, TService>(IServiceProvider serviceProvider) : IServiceResolver<TKey, TService>
         where TKey : notnull
         where TService : class
     {
         /// <summary>
         /// The service provider used to resolve services.
         /// </summary>
-        private readonly IServiceProvider _serviceProvider;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="KeyedServiceResolver{TKey, TService}"/> class.
-        /// </summary>
-        /// <param name="serviceProvider">
-        /// The service provider used to resolve services.
-        /// </param>
-        public KeyedServiceResolver(IServiceProvider serviceProvider) => _serviceProvider = serviceProvider;
+        private readonly IServiceProvider _serviceProvider = serviceProvider;
 
         /// <summary>
         /// Resolves a service instance based on the provided key.
