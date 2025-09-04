@@ -11,20 +11,18 @@ namespace CarWashProcessor.Application.Abstractions.Registration
     /// This attribute is used to facilitate automatic registration and resolution of wash
     /// service implementations.
     /// </remarks>
+    /// <remarks>
+    /// Constructor for WashTypeAttribute, which assigns the provided wash type to the Key property.
+    /// </remarks>
+    /// <param name="washType">
+    /// The specific type of wash service that the decorated class implements.
+    /// </param>
     [AttributeUsage(AttributeTargets.Class, Inherited = false, AllowMultiple = false)]
-    public sealed class WashTypeAttribute : Attribute, IKeyedRegistration<EServiceWash>
+    public sealed class WashTypeAttribute(EServiceWash washType) : Attribute, IKeyedRegistration<EServiceWash>
     {
         /// <summary>
         /// Gets the specific type of wash service that the decorated class implements.
         /// </summary>
-        public EServiceWash Key { get; }
-
-        /// <summary>
-        /// Constructor for WashTypeAttribute, which assigns the provided wash type to the Key property.
-        /// </summary>
-        /// <param name="washType">
-        /// The specific type of wash service that the decorated class implements.
-        /// </param>
-        public WashTypeAttribute(EServiceWash washType) => Key = washType;
+        public EServiceWash Key { get; } = washType;
     }
 }
