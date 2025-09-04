@@ -88,6 +88,12 @@ dotnet_style_qualification_for_field = false:suggestion
 dotnet_style_qualification_for_property = false:suggestion
 dotnet_style_qualification_for_method = false:suggestion
 dotnet_style_qualification_for_event = false:suggestion
+# Require XML docs on public API
+dotnet_diagnostic.CS1591.severity = warning
+# Async methods must have <returns>
+dotnet_diagnostic.SA1615.severity = warning
+# Parameters in XML must match
+dotnet_diagnostic.SA1612.severity = warning
 
 ############################
 # PowerShell / Shell scripts

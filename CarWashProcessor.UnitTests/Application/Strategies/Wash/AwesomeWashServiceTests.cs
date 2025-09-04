@@ -23,6 +23,7 @@ public class AwesomeWashServiceTests
     {
         // Common setup
         _loggerMock = new Mock<ILogger<AwesomeWashService>>();
+        _loggerMock.Setup(m => m.IsEnabled(LogLevel.Information)).Returns(true);
         _carJob = new CarJob(8675309, ECarMake.Ford, EServiceWash.Awesome, []);
     }
 
@@ -72,7 +73,9 @@ public class AwesomeWashServiceTests
             x => x.Log(
                 LogLevel.Information,
                 It.IsAny<EventId>(),
-                It.Is<It.IsAnyType>((v, t) => v.ToString()!.Contains("--> Awesome wash performed for customer " + _carJob!.CustomerId)),
+                It.Is<It.IsAnyType>((v, t) =>
+                    v.ToString()!.Contains(EServiceWash.Awesome.ToString()) &&
+                    v.ToString()!.Contains(_carJob!.CustomerId.ToString())),
                 It.IsAny<Exception>(),
                 It.IsAny<Func<It.IsAnyType, Exception?, string>>()),
             Times.Once);

@@ -4,15 +4,29 @@
     <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <AnalysisLevel>latest-all</AnalysisLevel>
     <UserSecretsId>dotnet-CarWashProcessor-7b7c6b84-5e47-429e-9bb3-bdca340b9262</UserSecretsId>
   </PropertyGroup>
-
-  <ItemGroup Label="NuGet Packages">
-    <PackageReference Include="Microsoft.Extensions.Hosting" Version="8.0.1" />
-  </ItemGroup>
 
   <PropertyGroup Label="Generated Code Configuration">
     <EmitCompilerGeneratedFiles>true</EmitCompilerGeneratedFiles>
     <CompilerGeneratedFilesOutputPath>$(BaseIntermediateOutputPath)generated</CompilerGeneratedFilesOutputPath>
   </PropertyGroup>
+
+  <ItemGroup Label="NuGet Packages">
+    <PackageReference Include="Microsoft.CodeAnalysis.NetAnalyzers" Version="9.*" PrivateAssets="All">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="8.0.1" />
+  </ItemGroup>
+
+  <ItemGroup Label="Unit Test Configuration">
+    <!-- Let the test project(s) see internals. -->
+    <InternalsVisibleTo Include="CarWashProcessor.UnitTests" />
+
+    <!-- If using Moq to mock internal types, also expose to Castle proxy -->
+    <InternalsVisibleTo Include="DynamicProxyGenAssembly2" />
+  </ItemGroup>
+
 </Project>

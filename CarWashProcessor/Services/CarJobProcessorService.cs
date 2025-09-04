@@ -6,6 +6,9 @@ using CarWashProcessor.Models;                              // For CarJob, EServ
 
 namespace CarWashProcessor.Services;                        // Namespace for the service, and unrefactored services (TireShineService, InteriorCleanService, HandWaxAndShineService)
 
+/// <summary>
+/// Service responsible for processing car jobs by coordinating wash and addon services.
+/// </summary>
 public class CarJobProcessorService
 {
     /// <summary>

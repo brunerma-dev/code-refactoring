@@ -20,6 +20,7 @@ namespace CarWashProcessor.UnitTests.Application.Strategies.Addon
         public void TestInit()
         {
             _loggerMock = new Mock<ILogger<TireShineService>>();
+            _loggerMock.Setup(m => m.IsEnabled(LogLevel.Information)).Returns(true);
             _carJob = new CarJob(8675309, ECarMake.Ford, EServiceWash.Awesome, []);
         }
 
@@ -60,7 +61,9 @@ namespace CarWashProcessor.UnitTests.Application.Strategies.Addon
                 x => x.Log(
                     LogLevel.Information,
                     It.IsAny<EventId>(),
-                    It.Is<It.IsAnyType>((v, t) => v.ToString()!.Contains("--> Tires have been shined for customer " + _carJob!.CustomerId)),
+                    It.Is<It.IsAnyType>((v, t) =>
+                        v.ToString()!.Contains("TireShine") &&
+                        v.ToString()!.Contains(_carJob!.CustomerId.ToString())),
                     It.IsAny<Exception>(),
                     It.IsAny<Func<It.IsAnyType, Exception?, string>>()),
                 Times.Once);

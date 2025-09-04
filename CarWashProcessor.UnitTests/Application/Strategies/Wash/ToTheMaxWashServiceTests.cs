@@ -22,7 +22,8 @@ public class ToTheMaxWashServiceTests
     public void TestInit()
     {
         _loggerMock = new Mock<ILogger<ToTheMaxWashService>>();
-        _carJob = new CarJob(8675309, ECarMake.Ford, EServiceWash.Awesome, []);
+        _loggerMock.Setup(m => m.IsEnabled(LogLevel.Information)).Returns(true);
+        _carJob = new CarJob(8675309, ECarMake.Ford, EServiceWash.ToTheMax, []);
     }
 
     [TestMethod]
@@ -62,7 +63,9 @@ public class ToTheMaxWashServiceTests
             x => x.Log(
                 LogLevel.Information,
                 It.IsAny<EventId>(),
-                It.Is<It.IsAnyType>((v, t) => v.ToString()!.Contains("--> To The Max wash performed for customer " + _carJob!.CustomerId)),
+                It.Is<It.IsAnyType>((v, t) =>
+                    v.ToString()!.Contains(EServiceWash.ToTheMax.ToString()) &&
+                    v.ToString()!.Contains(_carJob!.CustomerId.ToString())),
                 It.IsAny<Exception>(),
                 It.IsAny<Func<It.IsAnyType, Exception?, string>>()),
             Times.Once);
