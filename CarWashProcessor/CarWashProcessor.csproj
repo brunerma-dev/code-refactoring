@@ -7,7 +7,12 @@
     <UserSecretsId>dotnet-CarWashProcessor-7b7c6b84-5e47-429e-9bb3-bdca340b9262</UserSecretsId>
   </PropertyGroup>
 
-  <ItemGroup>
+  <ItemGroup Label="NuGet Packages">
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="8.0.1" />
   </ItemGroup>
+
+  <PropertyGroup Label="Generated Code Configuration">
+    <EmitCompilerGeneratedFiles>true</EmitCompilerGeneratedFiles>
+    <CompilerGeneratedFilesOutputPath>$(BaseIntermediateOutputPath)generated</CompilerGeneratedFilesOutputPath>
+  </PropertyGroup>
 </Project>

@@ -2,6 +2,7 @@
 
 using CarWashProcessor.Application.Abstractions.Registration;   // For AddonTypeAttribute
 using CarWashProcessor.Domain.Abstractions.Services;            // For IAddonServiceStrategy
+using CarWashProcessor.Logging;                                 // For AppLog
 using CarWashProcessor.Models;                                  // For CarJob, EServiceAddon
 
 namespace CarWashProcessor.Application.Strategies.Addons;
@@ -45,7 +46,7 @@ public class HandWaxAndShineService : IAddonServiceStrategy
         await Task.Delay(TimeSpan.FromSeconds(1), cancellationToken);
 
         // Log information
-        _logger.LogInformation("--> Hand waxed and shined for customer {CustomerId}!", carJob.CustomerId);
+        AppLog.AddonCompleted(_logger, EServiceAddon.HandWaxAndShine, carJob.CustomerId);
     }
 
 }

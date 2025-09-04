@@ -2,6 +2,7 @@
 
 using CarWashProcessor.Application.Abstractions.Registration;   // For WashTypeAttribute
 using CarWashProcessor.Domain.Abstractions.Services;            // For IWashServiceStrategy
+using CarWashProcessor.Logging;
 using CarWashProcessor.Models;                                  // For CarJob, EServiceWash
 
 namespace CarWashProcessor.Application.Strategies.Wash;
@@ -45,6 +46,6 @@ public class AwesomeWashService : IWashServiceStrategy
         await Task.Delay(TimeSpan.FromSeconds(1), cancellationToken);
 
         // Log information
-        _logger.LogInformation("--> Awesome wash performed for customer {CustomerId}!", carJob.CustomerId);
+        AppLog.WashCompleted(_logger, carJob.ServiceWash, carJob.CustomerId);
     }
 }

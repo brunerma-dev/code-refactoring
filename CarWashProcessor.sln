@@ -14,6 +14,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "decisions", "decisions", "{
 		docs\decisions\ADR-0001-unit-test-project.md = docs\decisions\ADR-0001-unit-test-project.md
 		docs\decisions\ADR-0002-adopt-wash-service-strategy-pattern.md = docs\decisions\ADR-0002-adopt-wash-service-strategy-pattern.md
 		docs\decisions\ADR-0003-ddd-clean-architecture.md = docs\decisions\ADR-0003-ddd-clean-architecture.md
+		docs\decisions\ADR-0004-adopt-loggermessage-delegates-ca1848.md = docs\decisions\ADR-0004-adopt-loggermessage-delegates-ca1848.md
 		docs\decisions\ADR-INDEX.md = docs\decisions\ADR-INDEX.md
 	EndProjectSection
 EndProject

@@ -2,6 +2,7 @@
 
 using CarWashProcessor.Application.Abstractions.Registration;   // For AddonTypeAttribute
 using CarWashProcessor.Domain.Abstractions.Services;            // For IAddonServiceStrategy
+using CarWashProcessor.Logging;                                 // For AppLog
 using CarWashProcessor.Models;                                  // For CarJob, EServiceAddon    
 
 namespace CarWashProcessor.Application.Strategies.Addons;
@@ -45,6 +46,6 @@ public class InteriorCleanService : IAddonServiceStrategy
         await Task.Delay(TimeSpan.FromSeconds(1), cancellationToken);
 
         // Log information
-        _logger.LogInformation("--> Interior has been cleaned for customer {CustomerId}!", carJob.CustomerId);
+        AppLog.AddonCompleted(_logger, EServiceAddon.InteriorClean, carJob.CustomerId);
     }
 }
