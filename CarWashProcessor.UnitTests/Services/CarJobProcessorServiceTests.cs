@@ -7,8 +7,6 @@ using CarWashProcessor.Services;
 
 using Moq;
 
-using System.Collections.Immutable;
-
 namespace CarWashProcessor.UnitTests.Services
 {
     [TestClass]
@@ -36,7 +34,7 @@ namespace CarWashProcessor.UnitTests.Services
             _washServiceStrategyMock = new Mock<IWashServiceStrategy>(MockBehavior.Strict);
             _addonServiceResolverMock = new Mock<IServiceResolver<EServiceAddon, IAddonServiceStrategy>>(MockBehavior.Strict);
             _addonServiceStrategyMock = new Mock<IAddonServiceStrategy>(MockBehavior.Strict);
-            _carJob = new CarJob(8675309, ECarMake.Ford, EServiceWash.Awesome, ImmutableArray<EServiceAddon>.Empty);
+            _carJob = new CarJob(8675309, ECarMake.Ford, EServiceWash.Awesome, []);
         }
 
         [TestMethod]
@@ -56,7 +54,7 @@ namespace CarWashProcessor.UnitTests.Services
             _washServiceResolverMock!.Setup(m => m.Resolve(EServiceWash.Basic)).Returns(_washServiceStrategyMock!.Object);
             _washServiceStrategyMock!.Setup(m => m.PerformWashAsync(It.IsAny<CarJob>(), It.IsAny<CancellationToken>())).Returns(Task.CompletedTask).Verifiable();
             _processorService = new CarJobProcessorService(_washServiceResolverMock!.Object, _addonServiceResolverMock!.Object);
-            var carJob = new CarJob(123456, ECarMake.Toyota, EServiceWash.Basic, ImmutableArray<EServiceAddon>.Empty);
+            var carJob = new CarJob(123456, ECarMake.Toyota, EServiceWash.Basic, []);
 
             // Act
             await _processorService.ProcessCarJobAsync(carJob);
@@ -73,7 +71,7 @@ namespace CarWashProcessor.UnitTests.Services
             _washServiceResolverMock!.Setup(m => m.Resolve(EServiceWash.Awesome)).Returns(_washServiceStrategyMock!.Object);
             _washServiceStrategyMock!.Setup(m => m.PerformWashAsync(It.IsAny<CarJob>(), It.IsAny<CancellationToken>())).Returns(Task.CompletedTask).Verifiable();
             _processorService = new CarJobProcessorService(_washServiceResolverMock!.Object, _addonServiceResolverMock!.Object);
-            var carJob = new CarJob(123456, ECarMake.Toyota, EServiceWash.Awesome, ImmutableArray<EServiceAddon>.Empty);
+            var carJob = new CarJob(123456, ECarMake.Toyota, EServiceWash.Awesome, []);
 
             // Act
             await _processorService.ProcessCarJobAsync(carJob);
@@ -90,7 +88,7 @@ namespace CarWashProcessor.UnitTests.Services
             _washServiceResolverMock!.Setup(m => m.Resolve(EServiceWash.ToTheMax)).Returns(_washServiceStrategyMock!.Object);
             _washServiceStrategyMock!.Setup(m => m.PerformWashAsync(It.IsAny<CarJob>(), It.IsAny<CancellationToken>())).Returns(Task.CompletedTask).Verifiable();
             _processorService = new CarJobProcessorService(_washServiceResolverMock!.Object, _addonServiceResolverMock!.Object);
-            var carJob = new CarJob(123456, ECarMake.Toyota, EServiceWash.ToTheMax, ImmutableArray<EServiceAddon>.Empty);
+            var carJob = new CarJob(123456, ECarMake.Toyota, EServiceWash.ToTheMax, []);
 
             // Act
             await _processorService.ProcessCarJobAsync(carJob);

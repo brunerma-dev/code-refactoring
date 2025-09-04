@@ -35,20 +35,6 @@ public class ToTheMaxWashService : IWashServiceStrategy
         _logger = logger;
     }
 
-    /// <summary>
-    /// Does a "To The Max" wash for the given car job.
-    /// </summary>
-    /// <param name="carJob">
-    /// The car job for which the "To The Max" wash is to be performed.
-    /// </param>
-    /// <returns>
-    /// A task representing the asynchronous operation of performing the "To The Max" wash.
-    /// </returns>
-    /// <exception cref="ArgumentNullException">
-    /// Thrown if the <paramref name="carJob"/> parameter is null.
-    /// </exception>
-    public async Task DoToTheMaxWashAsync(CarJob carJob) => await PerformWashAsync(carJob);
-
     /// <inheritdoc />
     public async Task PerformWashAsync(CarJob carJob, CancellationToken cancellationToken = default)
     {

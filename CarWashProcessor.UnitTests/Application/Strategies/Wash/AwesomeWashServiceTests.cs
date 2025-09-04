@@ -23,7 +23,7 @@ public class AwesomeWashServiceTests
     {
         // Common setup
         _loggerMock = new Mock<ILogger<AwesomeWashService>>();
-        _carJob = new CarJob(8675309, ECarMake.Ford, EServiceWash.Awesome, new ImmutableArray<EServiceAddon>());
+        _carJob = new CarJob(8675309, ECarMake.Ford, EServiceWash.Awesome, []);
     }
 
     [TestMethod]
@@ -45,47 +45,13 @@ public class AwesomeWashServiceTests
     }
 
     [TestMethod]
-    public async Task DoAwesomeWashAsync_WhenCarJobIsNull_ThrowsArgumentNullException()
-    {
-        // Arrange
-        _washService = new AwesomeWashService(_loggerMock!.Object);
-
-        // Act
-        var exception = await Assert.ThrowsExceptionAsync<ArgumentNullException>(async () => await _washService.DoAwesomeWashAsync(null!));
-
-        // Assert
-        Assert.AreEqual("carJob", exception.ParamName);
-    }
-
-    [TestMethod]
-    public async Task DoAwesomeWashAsync_WhenCalled_PerformsWashAndLogs()
-    {
-        // Arrange
-        _washService = new AwesomeWashService(_loggerMock!.Object);
-
-        // Act
-        await _washService.DoAwesomeWashAsync(_carJob!);
-
-        // Assert
-        // TODO: This approach could be modified by creating a custom ILogger implementation that records logs to a list and asserting against that.
-        _loggerMock.Verify(
-            x => x.Log(
-                LogLevel.Information,
-                It.IsAny<EventId>(),
-                It.Is<It.IsAnyType>((v, t) => v.ToString()!.Contains("--> Awesome wash performed for customer " + _carJob!.CustomerId)),
-                It.IsAny<Exception>(),
-                It.IsAny<Func<It.IsAnyType, Exception?, string>>()),
-            Times.Once);
-    }
-
-    [TestMethod]
     public async Task PerformWashAsync_WhenCarJobIsNull_ThrowsArgumentNullException()
     {
         // Arrange
         _washService = new AwesomeWashService(_loggerMock!.Object);
 
         // Act
-        var exception = await Assert.ThrowsExceptionAsync<ArgumentNullException>(async () => await _washService!.PerformWashAsync(null!));
+        var exception = await Assert.ThrowsExceptionAsync<ArgumentNullException>(async () => await _washService.PerformWashAsync(null!));
 
         // Assert
         Assert.AreEqual("carJob", exception.ParamName);

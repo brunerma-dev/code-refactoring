@@ -35,20 +35,6 @@ public class AwesomeWashService : IWashServiceStrategy
         _logger = logger;
     }
 
-    /// <summary>
-    /// Does an awesome wash for the given car job.
-    /// </summary>
-    /// <param name="carJob">
-    /// The car job for which the awesome wash is to be performed.
-    /// </param>
-    /// <returns>
-    /// A task representing the asynchronous operation of performing the awesome wash.
-    /// </returns>
-    /// <exception cref="ArgumentNullException">
-    /// Thrown if the <paramref name="carJob"/> parameter is null.
-    /// </exception>
-    public async Task DoAwesomeWashAsync(CarJob carJob) => await PerformWashAsync(carJob);
-	
     /// <inheritdoc />
     public async Task PerformWashAsync(CarJob carJob, CancellationToken cancellationToken = default)
     {

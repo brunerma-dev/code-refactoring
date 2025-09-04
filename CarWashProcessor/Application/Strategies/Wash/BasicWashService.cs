@@ -35,20 +35,6 @@ public class BasicWashService : IWashServiceStrategy
         _logger = logger;
     }
 
-    /// <summary>
-    /// Does a basic wash for the given car job.
-    /// </summary>
-    /// <param name="carJob">
-    /// The car job for which the basic wash is to be performed.
-    /// </param>
-    /// <returns>
-    /// A task representing the asynchronous operation of performing the basic wash.
-    /// </returns>
-    /// <exception cref="ArgumentNullException">
-    /// Thrown if the <paramref name="carJob"/> parameter is null.
-    /// </exception>
-    public async Task DoBasicWashAsync(CarJob carJob) => await PerformWashAsync(carJob);
-
     /// <inheritdoc />
     public async Task PerformWashAsync(CarJob carJob, CancellationToken cancellationToken = default)
     {

@@ -42,23 +42,9 @@ public class TireShineService : IAddonServiceStrategy
         ArgumentNullException.ThrowIfNull(carJob, nameof(carJob));
 
         // Wait a second (simulating addon-specific work).
-        await Task.Delay(TimeSpan.FromSeconds(1));
+        await Task.Delay(TimeSpan.FromSeconds(1), cancellationToken);
 
         // Log information
         _logger.LogInformation("--> Tires have been shined for customer {CustomerId}!", carJob.CustomerId);
     }
-
-    /// <summary>
-    /// Shines the tires for the given car job.
-    /// </summary>
-    /// <param name="carJob">
-    /// The car job for which the tires are to be shined.
-    /// </param>
-    /// <returns>
-    /// A task representing the asynchronous operation of shining the tires.
-    /// </returns>
-    /// <exception cref="ArgumentNullException">
-    /// Thrown if the <paramref name="carJob"/> parameter is null.
-    /// </exception>
-    public async Task ShineTiresAsync(CarJob carJob) => await PerformAddonAsync(carJob);
 }
