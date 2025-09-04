@@ -94,6 +94,8 @@ dotnet_diagnostic.CS1591.severity = warning
 dotnet_diagnostic.SA1615.severity = warning
 # Parameters in XML must match
 dotnet_diagnostic.SA1612.severity = warning
+# Only apply CA1515 to console apps and dlls
+dotnet_code_quality.CA1515.output_kind = ConsoleApplication, DynamicallyLinkedLibrary
 
 ############################
 # PowerShell / Shell scripts
