@@ -43,7 +43,7 @@ public class AwesomeWashService : IWashServiceStrategy
         ArgumentNullException.ThrowIfNull(carJob, nameof(carJob));
 
         // Wait a second (simulating wash type-specific work).
-        await Task.Delay(TimeSpan.FromSeconds(1), cancellationToken);
+        await Task.Delay(TimeSpan.FromSeconds(1), cancellationToken).ConfigureAwait(false);
 
         // Log information
         AppLog.WashCompleted(_logger, carJob.ServiceWash, carJob.CustomerId);

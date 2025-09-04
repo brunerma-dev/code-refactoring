@@ -43,7 +43,7 @@ public class HandWaxAndShineService : IAddonServiceStrategy
         ArgumentNullException.ThrowIfNull(carJob, nameof(carJob));
 
         // Wait a second (simulating addon-specific work).
-        await Task.Delay(TimeSpan.FromSeconds(1), cancellationToken);
+        await Task.Delay(TimeSpan.FromSeconds(1), cancellationToken).ConfigureAwait(false);
 
         // Log information
         AppLog.AddonCompleted(_logger, EServiceAddon.HandWaxAndShine, carJob.CustomerId);
