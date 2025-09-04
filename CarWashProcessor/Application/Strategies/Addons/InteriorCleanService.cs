@@ -35,20 +35,6 @@ public class InteriorCleanService : IAddonServiceStrategy
         _logger = logger;
     }
 
-    /// <summary>
-    /// Cleans the interior for the given car job.
-    /// </summary>
-    /// <param name="carJob">
-    /// The car job for which the interior is to be cleaned.
-    /// </param>
-    /// <returns>
-    /// A task representing the asynchronous operation of cleaning the interior.
-    /// </returns>
-    /// <exception cref="ArgumentNullException">
-    /// Thrown if the <paramref name="carJob"/> parameter is null.
-    /// </exception>
-	public async Task CleanInteriorAsync(CarJob carJob) => await PerformAddonAsync(carJob);
-
     /// <inheritdoc />
     public async Task PerformAddonAsync(CarJob carJob, CancellationToken cancellationToken = default)
     {

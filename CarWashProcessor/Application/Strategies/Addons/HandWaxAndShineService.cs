@@ -35,20 +35,6 @@ public class HandWaxAndShineService : IAddonServiceStrategy
         _logger = logger;
     }
 
-    /// <summary>
-    /// Performs hand waxing and shining for the given car job.
-    /// </summary>
-    /// <param name="carJob">
-    /// The car job for which hand waxing and shining is to be performed.
-    /// </param>
-    /// <returns>
-    /// A task representing the asynchronous operation of hand waxing and shining.
-    /// </returns>
-    /// <exception cref="ArgumentNullException">
-    /// Thrown if the <paramref name="carJob"/> parameter is null.
-    /// </exception>
-    public async Task HandWaxAndShineAsync(CarJob carJob) => await PerformAddonAsync(carJob);
-
     /// <inheritdoc />
     public async Task PerformAddonAsync(CarJob carJob, CancellationToken cancellationToken = default)
     {
