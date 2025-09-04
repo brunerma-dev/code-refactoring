@@ -59,3 +59,4 @@ packages/
 
 # Ignore local tooling caches
 .ionide/
+*.lutconfig

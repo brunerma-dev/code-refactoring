@@ -1,7 +1,5 @@
 // Copyright (c) 2024 Car Wash Processor., All Rights Reserved
 
-using System.Reflection;
-
 using CarWashProcessor.Application.Abstractions.Registration;
 using CarWashProcessor.Application.Abstractions.Resolution;
 using CarWashProcessor.Domain.Abstractions.Services;
@@ -66,7 +64,7 @@ public class Program
         // Using .NET 8 keyed DI at runtime; O(1) resolution by enum key.
         // ─────────────────────────────────────────────────────────────────────────────
         services.AddSingleton<IServiceResolver<EServiceWash, IWashServiceStrategy>, KeyedServiceResolver<EServiceWash, IWashServiceStrategy>>();
-        services.AddSingleton<IServiceResolver<EServiceAddon, IAddonStrategy>, KeyedServiceResolver<EServiceAddon, IAddonStrategy>>();
+        services.AddSingleton<IServiceResolver<EServiceAddon, IAddonServiceStrategy>, KeyedServiceResolver<EServiceAddon, IAddonServiceStrategy>>();
 
         // ─────────────────────────────────────────────────────────────────────────────
         // Convention-based, keyed registrations for policies (ATTRIBUTE-DRIVEN)
@@ -74,17 +72,14 @@ public class Program
         // - Keep fail-fast semantics for duplicate keys (enforced by the registrar).
         // ─────────────────────────────────────────────────────────────────────────────
 
+        // Iterate all currently loaded assemblies in the application domain.
         foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
         {
             // Register wash service strategies by convention (keyed by EServiceWash via WashTypeAttribute).
             services.AddKeyedImplementationsByConvention<IWashServiceStrategy, EServiceWash, WashTypeAttribute>(assembly);
 
-            // TODO: Add addon strategies when implemented.
+            // Register addon service strategies by convention (keyed by EServiceAddon via AddonTypeAttribute).
+            services.AddKeyedImplementationsByConvention<IAddonServiceStrategy, EServiceAddon, AddonTypeAttribute>(assembly);
         }
-
-        // TODO: Remove explicit registrations once convention-based registration is verified.
-        services.AddSingleton<TireShineService>();
-        services.AddSingleton<InteriorCleanService>();
-        services.AddSingleton<HandWaxAndShineService>();
     }
 }
